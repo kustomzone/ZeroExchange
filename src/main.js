@@ -133,7 +133,9 @@ class ZeroApp extends ZeroFrame {
 	}
 
 	addMerger(ziteAddress) {
-		return self.cmdp("mergerSiteAdd", [ziteAddress])
+		var self = this;
+
+		return this.cmdp("mergerSiteAdd", [ziteAddress])
 			.then(() => {
 				self.cmdp("mergerSiteList", [true])
 					.then((mergerZites) => {
