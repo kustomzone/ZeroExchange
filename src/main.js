@@ -22,14 +22,15 @@ var app = new Vue({
 	el: "#app",
 	template: `<div>
 			<component ref="navbar" :is="navbar"></component>
-			<component ref="view" v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo"></component>
+			<component ref="view" :is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" :user-info="userInfo" :merger-zites="mergerZites"></component>
 		</div>`,
 	data: {
 		navbar: Navbar,
 		currentView: null,
 		siteInfo: null,
 		userInfo: null,
-		signin_modal_active: false
+		signin_modal_active: false,
+		mergerZites: null
 	},
 	methods: {
 		getUserInfo: function(f = null) { // TODO: This can be passed in a function as a callback
@@ -99,6 +100,45 @@ class ZeroApp extends ZeroFrame {
 				app.siteInfo = siteInfo;
 				//app.getUserInfo();
 				//self.cmdp("wrapperNotification", ["info", "Loaded!"]);
+				self.requestPermission("Merger:ZeroExchange", siteInfo, function() {
+					self.cmdp("mergerSiteList", [true])
+						.then((mergerZites) => {
+							console.log(mergerZites);
+							if (!mergerZites["1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky"]) {
+								/*self.cmdp("mergerSiteAdd", ["1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky"])
+									.then(() => {
+										self.cmdp("mergerSiteList", [true])
+											.then((mergerZites) => {
+												app.mergerZites = mergerZites;
+											});
+									});*/
+								self.addMerger("1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky");
+							} else {
+								app.mergerZites = mergerZites;
+							}
+						});
+				});
+			});
+	}
+
+	requestPermission(permission, siteInfo, callback) {
+		// Already have permission
+		if (siteInfo.settings.permissions.indexOf(permission) > -1) {
+			callback();
+			return;
+		}
+
+		this.cmdp("wrapperPermissionAdd", [permission])
+			.then(callback);
+	}
+
+	addMerger(ziteAddress) {
+		return self.cmdp("mergerSiteAdd", [ziteAddress])
+			.then(() => {
+				self.cmdp("mergerSiteList", [true])
+					.then((mergerZites) => {
+						app.mergerZites = mergerZites;
+					});
 			});
 	}
 
@@ -130,10 +170,12 @@ class ZeroApp extends ZeroFrame {
 
 page = new ZeroApp();
 
-var Home = require("./router_pages/app.vue");
+var Home = require("./router_pages/home.vue");
+var TopicHome = require("./router_pages/topic_home.vue");
 var About = require("./router_pages/about.vue");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	{ route: "about", component: About },
+	{ route: ":topicaddress", component: TopicHome },
 	{ route: "", component: Home }
 ]);
