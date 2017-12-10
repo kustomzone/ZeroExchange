@@ -1,0 +1,4 @@
+[submodule "src/ZeroQuery"]
+	path = src/ZeroQuery
+	url = https://github.com/krixano/ZeroQuery.git
+	branch = master
