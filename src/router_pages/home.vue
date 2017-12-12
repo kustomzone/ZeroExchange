@@ -5,10 +5,13 @@
 	        	<h4>Top Questions</h4>
 	        </div>
 	        <div class="col s12 m5 l3">
-	        	<h5>Topics</h5>
+	        	<h5 class="center-align">Connected Topics</h5>
 	        	<ul class="collection">
-	        		<a class="collection-item" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address" v-on:click.prevent="goto(zite.address)">{{ zite.content.title }}</a>
+	        		<a class="collection-item center-align" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address" v-on:click.prevent="goto(zite.address)">{{ zite.content.title }}</a>
 	        	</ul>
+	        	<div class="center-align">
+	        		<a href="#" style="">Top Available Topics</a>
+	        	</div>
 	        </div>
 	    </div>
 	</div>

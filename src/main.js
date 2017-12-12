@@ -21,7 +21,7 @@ var Navbar = require("./vue_components/navbar.vue");
 var app = new Vue({
 	el: "#app",
 	template: `<div>
-			<component ref="navbar" :is="navbar"></component>
+			<component ref="navbar" :is="navbar" :user-info="userInfo"></component>
 			<component ref="view" :is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" :user-info="userInfo" :merger-zites="mergerZites"></component>
 		</div>`,
 	data: {
@@ -39,8 +39,19 @@ var app = new Vue({
                 return;
             }
 
+            console.log("Getting User Info");
+
             var that = this;
 
+            that.userInfo = {
+                cert_user_id: that.siteInfo.cert_user_id,
+                auth_address: that.siteInfo.auth_address//,
+                //keyvalue: keyvalue
+            };
+            that.$emit("setUserInfo", that.userInfo);
+            if (f !== null && typeof f === "function") f();
+
+            // TODO: This Query isn't working!
             page.cmd("dbQuery", ["SELECT key, value FROM keyvalue LEFT JOIN json USING (json_id) WHERE cert_user_id=\"" + this.siteInfo.cert_user_id + "\" AND directory=\"users/" + this.siteInfo.auth_address + "\""], (rows) => {
                 var keyvalue = {};
 
@@ -52,13 +63,9 @@ var app = new Vue({
                 if (!keyvalue.name || keyvalue.name === "") {
                     return;
                 }
-                that.userInfo = {
-                    cert_user_id: that.siteInfo.cert_user_id,
-                    auth_address: that.siteInfo.auth_address,
-                    keyvalue: keyvalue
-                };
+                //console.log("TESTING")
 
-                if (!keyvalue.languages || keyvalue.languages === "") { // TODO: Might not need this check (this was from ZeroMedium originally)
+                /*if (!keyvalue.languages || keyvalue.languages === "") { // TODO: Might not need this check (this was from ZeroMedium originally)
                     that.language_modal_active = true;
                     that.$on("setUserLanguages", (languages) => {
                         that.keyvalue.languages = languages;
@@ -71,11 +78,11 @@ var app = new Vue({
                         /*page.getTopics((topics) => {
                             console.log(topics);
                             cache_add("home_topics", topics);
-                        });*/
+                        });*/ /*
                     });
-                } else {
+                } else {*/
                     that.$emit("setUserInfo", that.userInfo); // TODO: Not sure if I need this if I can pass in a function callback instead
-                    cache_remove("home_topics");
+                    //cache_remove("home_topics");
                     if (f !== null && typeof f === "function") f();
                     /*if (Router.currentRoute == "") {
                         that.$refs.view.getTopics();
@@ -84,7 +91,7 @@ var app = new Vue({
                         console.log(topics);
                         cache_add("home_topics", topics);
                     });*/
-                }
+                //}
             });
         }
 	}
@@ -98,7 +105,7 @@ class ZeroApp extends ZeroFrame {
 			.then(siteInfo => {
 				self.siteInfo = siteInfo;
 				app.siteInfo = siteInfo;
-				//app.getUserInfo();
+				app.getUserInfo();
 				//self.cmdp("wrapperNotification", ["info", "Loaded!"]);
 				self.requestPermission("Merger:ZeroExchange", siteInfo, function() {
 					self.cmdp("mergerSiteList", [true])
@@ -115,6 +122,7 @@ class ZeroApp extends ZeroFrame {
 								self.addMerger("1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky");
 							} else {
 								app.mergerZites = mergerZites;
+								app.$emit('setMergerZites', mergerZites);
 							}
 						});
 				});
@@ -140,6 +148,7 @@ class ZeroApp extends ZeroFrame {
 				self.cmdp("mergerSiteList", [true])
 					.then((mergerZites) => {
 						app.mergerZites = mergerZites;
+						app.$emit('setMergerZites', mergerZites);
 					});
 			});
 	}
@@ -148,7 +157,7 @@ class ZeroApp extends ZeroFrame {
 		if (cmd === "setSiteInfo") {
 			this.siteInfo = message.params;
 			app.siteInfo = message.params;
-			//app.getUserInfo();
+			app.getUserInfo();
 		}
 
 		if (message.params.event[0] === "file_done") {
@@ -158,7 +167,7 @@ class ZeroApp extends ZeroFrame {
 	}
 
 	selectUser() {
-		return this.cmdp("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"] });
+		return this.cmdp("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit", "peak.id"] });
     }
 
     signout() {
@@ -174,10 +183,12 @@ page = new ZeroApp();
 
 var Home = require("./router_pages/home.vue");
 var TopicHome = require("./router_pages/topic_home.vue");
+var TopicAsk = require("./router_pages/topic_ask.vue");
 var About = require("./router_pages/about.vue");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	{ route: "about", component: About },
+	{ route: ":topicaddress/ask", component: TopicAsk },
 	{ route: ":topicaddress", component: TopicHome },
 	{ route: "", component: Home }
 ]);

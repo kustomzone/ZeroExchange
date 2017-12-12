@@ -1,8 +1,25 @@
 <template>
-	<div id="topicHome" class="container">
+	<div id="topicAsk" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="top"></component>
+	        	<component :is="topic_navbar" active="ask"></component>
+	        	<div class="card">
+	        		<div class="card-content">
+	        			<span class="card-title">{{ topicName }}Ask Question</span>
+		        		<!-- Using form so I can get html5 form validation -->
+		        		<form v-on:submit.prevent="postQuestion()">
+			        		<div class="input-field">
+			        			<input id="title" v-model="title" type="text" class="validate" required>
+			        			<label for="title">Title</label>
+			        		</div>
+			        		<div class="input-field">
+			        			<textarea id="body" class="materialize-textarea validate" required></textarea>
+			        			<label for="body">Question body</label>
+			        		</div>
+			        		<button type="submit" class="btn waves-effect waves-light" :class="{ 'disabled': submitBtnDisabled }">Submit</button>
+			        	</form>
+			        </div>
+	        	</div>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<div class="card">
@@ -23,15 +40,17 @@
 
 <script>
 	var Router = require("../libs/router.js");
+	var $ = require("jquery");
 	var TopicNavbar = require("../vue_components/topic_navbar.vue");
 
 	module.exports = {
 		props: ["mergerZites"],
-		name: "topicHome",
+		name: "topicAsk",
 		data: () => {
 			return {
 				topic_navbar: TopicNavbar,
-				topicName: ""
+				topicName: "",
+				submitBtnDisabled: false
 			}
 		},
 		computed: {
@@ -68,6 +87,10 @@
 			},
 			isActive: function(address) {
 				return Router.currentParams["topicaddress"] === address;
+			},
+			postQuestion: function() {
+				console.log("Post Question");
+				this.submitBtnDisabled = true;
 			}
 		}
 	}

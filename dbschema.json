@@ -3,6 +3,13 @@
 	"db_file": "merged-ZeroExchange/ZeroExchange.db",
 	"version": 3,
 	"maps": {
+		"UserDb/data/users/.+/content.json": {
+			"to_json_table": ["cert_user_id"],
+			"file_name": "data.json"
+		},
+		"UserDb/data/users/.+/data.json": {
+			"to_keyvalue": ["about"]
+		},
 		".+/data/users/.+/content.json": {
 			"to_json_table": ["cert_user_id"],
 			"file_name": "data.json"
