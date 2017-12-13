@@ -3,7 +3,7 @@
 		<div class="nav-wrapper">
 			<div class="container">
 				<a href="./?/" class="brand-logo" v-on:click.prevent="navbarLinkClick({ route: '' })">{{ ZiteName }}</a>
-				<a href="#" data-activates="mobile-nav" class="button-collapse"><i class="material-icons">menu</i></a>
+				<a href="#" data-activates="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 				<!--<ul class="left">-->
 				<!--</ul>-->
 				<ul class="right hide-on-med-and-down">
@@ -13,7 +13,7 @@
 					<li v-if="!isLoggedIn"><a v-on:click.prevent="login()">Login</a></li>
 					<li v-else><a v-on:click.prevent="">{{ userInfo ? userInfo.cert_user_id : "" }}</a></li>
 				</ul>
-				<ul id="mobile-nav" class="side-nav">
+				<ul id="mobile-nav" class="sidenav">
 					<li v-for="link in navbarLinks">
 						<a :href="'./?/' + link.route" v-on:click.prevent="navbarLinkClick(link)">{{ link.name }}</a>
 					</li>
@@ -26,8 +26,8 @@
 </template>
 
 <script>
-	var $ = require("jquery");
 	var Router = require("../libs/router.js");
+	var M = require("materialize-css");
 
 	module.exports = {
 		props: ["userInfo"],
@@ -41,7 +41,11 @@
 			}
 		},
 		mounted: function() {
-			$(".button-collapse").sideNav();
+			var elem = document.querySelector('.sidenav');
+  			var instance = new M.Sidenav(elem, {
+  				edge: "left",
+  				draggable: true
+  			});
 			if (!this.userInfo) {
 				/*this.$parent.on('setUserInfo', function() {
 					// TODO

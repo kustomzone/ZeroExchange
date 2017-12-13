@@ -1,8 +1,8 @@
 <template>
-	<div id="topicHome" class="container">
+	<div id="topicMine" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="top"></component>
+	        	<component :is="topic_navbar" active="mine"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -18,7 +18,7 @@
 
 	module.exports = {
 		props: ["mergerZites"],
-		name: "topicHome",
+		name: "topicMine",
 		data: () => {
 			return {
 				topic_navbar: TopicNavbar,

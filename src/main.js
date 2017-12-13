@@ -1,7 +1,7 @@
 version = "0.1"
 
-var $ = require("jquery");
-var Hammer = require("hammerjs");
+var anime = require("animejs");
+window.anime = anime;
 var Materialize = require("materialize-css/dist/js/materialize.min.js");
 
 var ZeroFrame = require("./libs/ZeroFrame.js");
@@ -183,12 +183,16 @@ page = new ZeroApp();
 
 var Home = require("./router_pages/home.vue");
 var TopicHome = require("./router_pages/topic_home.vue");
+var TopicMine = require("./router_pages/topic_mine.vue");
 var TopicAsk = require("./router_pages/topic_ask.vue");
+var TopicSearch = require("./router_pages/topic_search.vue");
 var About = require("./router_pages/about.vue");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	{ route: "about", component: About },
+	{ route: ":topicaddress/mine", component: TopicMine },
 	{ route: ":topicaddress/ask", component: TopicAsk },
+	{ route: ":topicaddress/search", component: TopicSearch },
 	{ route: ":topicaddress", component: TopicHome },
 	{ route: "", component: Home }
 ]);

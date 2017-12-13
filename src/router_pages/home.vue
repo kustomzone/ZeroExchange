@@ -5,13 +5,7 @@
 	        	<h4>Top Questions</h4>
 	        </div>
 	        <div class="col s12 m5 l3">
-	        	<h5 class="center-align">Connected Topics</h5>
-	        	<ul class="collection">
-	        		<a class="collection-item center-align" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address" v-on:click.prevent="goto(zite.address)">{{ zite.content.title }}</a>
-	        	</ul>
-	        	<div class="center-align">
-	        		<a href="#" style="">Top Available Topics</a>
-	        	</div>
+	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
 	        </div>
 	    </div>
 	</div>
@@ -19,12 +13,14 @@
 
 <script>
 	var Router = require("../libs/router.js");
+	var connectedTopics = require("../vue_components/connected_topics.vue");
 
 	module.exports = {
 		props: ["mergerZites"],
 		name: "mainapp",
 		data: () => {
 			return {
+				connected_topics: connectedTopics
 			}
 		},
 		computed: {

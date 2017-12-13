@@ -1,8 +1,19 @@
 <template>
-	<div id="topicHome" class="container">
+	<div id="topicSearch" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="top"></component>
+	        	<component :is="topic_navbar" active="search" style="margin-bottom: 0;" class="z-depth-2"></component>
+	        	<nav style="background-color: #1976D2; margin-bottom: 10px;">
+		        	<div class="nav-wrapper">
+		        		<form>
+	    		        	<div class="input-field">
+	    		        		<input id="search" type="search" placeholder="Search" v-model="searchInput" required>
+	    		        		<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+	    		        		<i class="material-icons" v-on:click="searchInput = ''">close</i>
+	    			        </div>
+	    		      	</form>
+		        	</div>
+		        </nav>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -18,12 +29,13 @@
 
 	module.exports = {
 		props: ["mergerZites"],
-		name: "topicHome",
+		name: "topicSearch",
 		data: () => {
 			return {
 				topic_navbar: TopicNavbar,
 				connected_topics: connectedTopics,
-				topicName: ""
+				topicName: "",
+				searchInput: ""
 			}
 		},
 		computed: {

@@ -22,17 +22,7 @@
 	        	</div>
 	        </div>
 	        <div class="col s12 m5 l3">
-	        	<div class="card">
-	        		<div class="card-content">
-			        	<span class="card-title center-align">Connected Topics</span>
-			        	<ul class="collection">
-			        		<a class="collection-item center-align" :class="{ 'active': isActive(zite.address) }" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address + '/ask'" v-on:click.prevent="goto(zite.address + '/ask')">{{ zite.content.title }}</a>
-			        	</ul>
-			        	<div class="center-align">
-			        		<a href="#" style="">Top Available Topics</a>
-			        	</div>
-			        </div>
-		        </div>
+	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
 	        </div>
 	    </div>
 	</div>
@@ -40,8 +30,8 @@
 
 <script>
 	var Router = require("../libs/router.js");
-	var $ = require("jquery");
 	var TopicNavbar = require("../vue_components/topic_navbar.vue");
+	var connectedTopics = require("../vue_components/connected_topics.vue");
 
 	module.exports = {
 		props: ["mergerZites"],
@@ -49,6 +39,7 @@
 		data: () => {
 			return {
 				topic_navbar: TopicNavbar,
+				connected_topics: connectedTopics,
 				topicName: "",
 				submitBtnDisabled: false
 			}
