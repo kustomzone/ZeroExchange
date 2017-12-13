@@ -3,7 +3,7 @@
 		<div class="nav-wrapper">
 			<div class="container">
 				<a href="./?/" class="brand-logo" v-on:click.prevent="navbarLinkClick({ route: '' })">{{ ZiteName }}</a>
-				<a href="#" data-activates="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+				<a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 				<!--<ul class="left">-->
 				<!--</ul>-->
 				<ul class="right hide-on-med-and-down">
