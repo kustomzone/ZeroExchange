@@ -1,5 +1,5 @@
 <template>
-	<ul id="topicNavbar" class="tabs tabs-fixed-width z-depth-2" style="background-color: #1976D2; margin-top: 10px; margin-bottom: 10px;">
+	<ul id="topicNavbar" class="tabs tabs-fixed-width z-depth-2" style="background-color: #1976D2; margin-top: 10px; margin-bottom: 15px;">
 		<li class="tab waves-effect waves-light"><a class="white-text" :class="{ 'active': isActive('top') }" v-on:click.prevent="tabClick('top')">Top</a></li>
 		<li class="tab waves-effect waves-light"><a class="white-text" :class="{ 'active': isActive('mine') }" v-on:click.prevent="tabClick('mine')">Mine</a></li>
 		<li class="tab waves-effect waves-light"><a class="white-text" :class="{ 'active': isActive('ask') }" v-on:click.prevent="tabClick('ask')">Ask</a></li>

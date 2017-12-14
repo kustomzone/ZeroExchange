@@ -7,7 +7,7 @@
 	        		<a class="collection-item center-align" :class="{ 'active': isActive(zite.address) }" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address" v-on:click.prevent="goto(zite.address)">{{ zite.content.title }}</a>
 	        	</ul>
 	        	<div class="center-align">
-	        		<a href="#" style="">Top Available Topics</a>
+	        		<a href="./?/top-available" v-on:click.prevent="goto('top-available')">Top Available Topics</a>
 	        	</div>
 	        </div>
         </div>

@@ -259,9 +259,11 @@ var TopicMine = require("./router_pages/topic_mine.vue");
 var TopicAsk = require("./router_pages/topic_ask.vue");
 var TopicSearch = require("./router_pages/topic_search.vue");
 var About = require("./router_pages/about.vue");
+var TopAvailable = require("./router_pages/top_available_topics.vue");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	{ route: "about", component: About },
+	{ route: "top-available", component: TopAvailable },
 	{ route: ":topicaddress/mine", component: TopicMine },
 	{ route: ":topicaddress/ask", component: TopicAsk },
 	{ route: ":topicaddress/search", component: TopicSearch },

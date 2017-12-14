@@ -23,6 +23,14 @@
 				connected_topics: connectedTopics
 			}
 		},
+		beforeMount: function() {
+			this.$parent.$on("setMergerZites", this.manageMerger);
+
+			// If mergerZites is empty
+			if (this.mergerZites && Object.keys(this.mergerZites).length != 0 && this.mergerZites.constructor === Object) {
+				this.manageMerger(this.mergerZites);
+			}
+		},
 		computed: {
 			mergerZiteValues: function() {
 				if (this.mergerZites == null) {
@@ -38,6 +46,9 @@
 			}
 		},
 		methods: {
+			manageMerger: function(mergerZites) {
+				// Merger zites were successfully added
+			},
 			goto: function(to) {
 				Router.navigate(to);
 			}

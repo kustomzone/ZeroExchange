@@ -77,10 +77,15 @@
 		methods: {
 			manageMerger: function(mergerZites) {
 				if (!mergerZites[Router.currentParams["topicaddress"]]) {
-					page.addMerger(Router.currentParams["topicaddress"]);
+					page.addMerger(Router.currentParams["topicaddress"])
+						.then(() => {
+							this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+							this.topicAddress = Router.currentParams["topicaddress"];
+						});
+				} else {
+					this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+					this.topicAddress = Router.currentParams["topicaddress"];
 				}
-				this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
-				this.topicAddress = Router.currentParams["topicaddress"];
 			},
 			goto: function(to) {
 				Router.navigate(to);

@@ -3,7 +3,7 @@
 		<div class="row">
 	        <div class="col s12 m7 l9">
 	        	<component :is="topic_navbar" active="search" style="margin-bottom: 0;" class="z-depth-2"></component>
-	        	<nav style="background-color: #1976D2; margin-bottom: 10px;">
+	        	<nav style="background-color: #1976D2; margin-bottom: 15px;">
 		        	<div class="nav-wrapper">
 		        		<form>
 	    		        	<div class="input-field">
