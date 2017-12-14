@@ -13,8 +13,12 @@
 			        			<label for="title">Title</label>
 			        		</div>
 			        		<div class="input-field">
-			        			<textarea id="body" class="materialize-textarea validate" required></textarea>
+			        			<textarea id="body" class="materialize-textarea validate" required v-model="body"></textarea>
 			        			<label for="body">Question body</label>
+			        		</div>
+			        		<div class="input-field">
+			        			<input id="tags" v-model="tags" type="text" class="validate" required>
+			        			<label for="tags">Tags</label>
 			        		</div>
 			        		<button type="submit" class="btn waves-effect waves-light" :class="{ 'disabled': submitBtnDisabled }">Submit</button>
 			        	</form>
@@ -41,7 +45,11 @@
 				topic_navbar: TopicNavbar,
 				connected_topics: connectedTopics,
 				topicName: "",
-				submitBtnDisabled: false
+				topicAddress: "",
+				submitBtnDisabled: false,
+				title: "",
+				body: "",
+				tags: ""
 			}
 		},
 		computed: {
@@ -72,6 +80,7 @@
 					page.addMerger(Router.currentParams["topicaddress"]);
 				}
 				this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+				this.topicAddress = Router.currentParams["topicaddress"];
 			},
 			goto: function(to) {
 				Router.navigate(to);
@@ -82,6 +91,13 @@
 			postQuestion: function() {
 				console.log("Post Question");
 				this.submitBtnDisabled = true;
+
+				var self = this;
+
+				page.postQuestion(this.topicAddress, this.title, this.body, this.tags)
+					.then(() => {
+						self.submitBtnDisabled = false;
+					});
 			}
 		}
 	}

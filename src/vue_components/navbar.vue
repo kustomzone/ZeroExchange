@@ -11,7 +11,7 @@
 						<a :href="'./?/' + link.route" v-on:click.prevent="navbarLinkClick(link)">{{ link.name }}</a>
 					</li>
 					<li v-if="!isLoggedIn"><a v-on:click.prevent="login()">Login</a></li>
-					<li v-else><a v-on:click.prevent="">{{ userInfo ? userInfo.cert_user_id : "" }}</a></li>
+					<li v-else><a v-on:click.prevent="login()">{{ userInfo ? userInfo.cert_user_id : "" }}</a></li>
 				</ul>
 				<ul id="mobile-nav" class="sidenav">
 					<li v-for="link in navbarLinks">

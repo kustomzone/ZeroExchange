@@ -3,19 +3,12 @@
 	"db_file": "merged-ZeroExchange/ZeroExchange.db",
 	"version": 3,
 	"maps": {
-		"UserDb/data/users/.+/content.json": {
-			"to_json_table": ["cert_user_id"],
-			"file_name": "data.json"
-		},
-		"UserDb/data/users/.+/data.json": {
-			"to_keyvalue": ["about"]
-		},
 		".+/data/users/.+/content.json": {
 			"to_json_table": ["cert_user_id"],
 			"file_name": "data.json"
 		},
 		".+/data/users/.+/data.json": {
-			"to_table": ["posts"],
+			"to_table": ["questions", "answers", "answer_votes", "comments"],
 			"to_keyvalue": ["next_comment_id", "next_question_id", "next_answer_id"]
 		}
 	},
@@ -29,7 +22,7 @@
 		        ["cert_user_id", "TEXT"]
 		    ],
 		    "indexes": ["CREATE UNIQUE INDEX path ON json(directory, site, file_name)"],
-		    "schema_changed": 2
+		    "schema_changed": 3
 		},
 		"questions": {
 			"cols": [
@@ -39,11 +32,12 @@
 			    ["solution_id", "INTEGER"],
 			    ["solution_auth_address", "TEXT"],
 			    ["tags", "TEXT"],
+			    ["date_updated", "INTEGER"],
 			    ["date_added", "INTEGER"],
 			    ["json_id", "INTEGER REFERENCES json (json_id)"]
 			],
-			"indexes": ["CREATE UNIQUE INDEX question_key ON questions(json_id, question_id)"],
-			"schema_changed": 1
+			"indexes": ["CREATE UNIQUE INDEX question_key ON questions(json_id, question_id)", "CREATE INDEX question_date_added_idx ON questions (date_added DESC)"],
+			"schema_changed": 2
 		},
 		"answers": {
 			"cols": [
@@ -51,11 +45,12 @@
 			    ["question_id", "INTEGER"],
 			    ["question_auth_address", "TEXT"],
 			    ["body", "TEXT"],
+			    ["date_updated", "INTEGER"],
 			    ["date_added", "INTEGER"],
 			    ["json_id", "INTEGER REFERENCES json (json_id)"]
 			],
-			"indexes": ["CREATE UNIQUE INDEX answer_key ON answers(json_id, answer_id)"],
-			"schema_changed": 1
+			"indexes": ["CREATE UNIQUE INDEX answer_key ON answers(json_id, answer_id)", "CREATE INDEX answer_reference_idx ON answers (question_id, question_auth_address)", "CREATE INDEX answer_date_added_idx ON answers (date_added DESC)"],
+			"schema_changed": 2
 		},
 		"answer_votes": {
             "cols": [
@@ -63,10 +58,12 @@
                 ["answer_id", "INTEGER"],
                 ["answer_auth_address", "TEXT"],
                 ["vote", "INTEGER"],
+                ["date_updated", "INTEGER"],
+                ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX answer_votekey ON answer_votes(json_id, answer_vote_id)"],
-            "schema_changed": 1
+            "schema_changed": 2
         },
         "comments": {
             "cols": [
@@ -78,8 +75,8 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX comment_key ON comments(json_id, comment_id)", "CREATE INDEX comment_reference_id ON comments(reference_id)"],
-            "schema_changed": 1
+            "indexes": ["CREATE UNIQUE INDEX comment_key ON comments(json_id, comment_id)", "CREATE INDEX comment_reference_idx ON comments(reference_id, reference_auth_address, reference_type)", "CREATE INDEX comment_date_added_idx ON comments (date_added DESC)"],
+            "schema_changed": 2
         }
 	}
 }

@@ -3,6 +3,15 @@
 		<div class="row">
 	        <div class="col s12 m7 l9">
 	        	<component :is="topic_navbar" active="mine"></component>
+	        	<div class="card" v-for="question in questions">
+	        		<div class="card-content">
+	        			<span class="card-title">{{ question.title }}</span>
+	        			<p>
+	        				{{ question.body }}
+	        			</p>
+	        			<small>Published {{ getDate(question.date_added) }}</small>
+	        		</div>
+	        	</div>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -15,6 +24,7 @@
 	var Router = require("../libs/router.js");
 	var TopicNavbar = require("../vue_components/topic_navbar.vue");
 	var connectedTopics = require("../vue_components/connected_topics.vue");
+	var moment = require("moment");
 
 	module.exports = {
 		props: ["mergerZites"],
@@ -23,7 +33,9 @@
 			return {
 				topic_navbar: TopicNavbar,
 				connected_topics: connectedTopics,
-				topicName: ""
+				topicName: "",
+				topicAddress: "",
+				questions: []
 			}
 		},
 		computed: {
@@ -41,25 +53,49 @@
 			}
 		},
 		beforeMount: function() {
-			this.$parent.$on("setMergerZites", this.manageMerger);
+			var self = this;
+
+			this.$parent.$on("setMergerZites", function(mergerZites) {
+				self.manageMerger(mergerZites);
+				self.getQuestions();
+			});
 
 			// If mergerZites is empty
 			if (this.mergerZites && Object.keys(this.mergerZites).length != 0 && this.mergerZites.constructor === Object) {
 				this.manageMerger(this.mergerZites);
+				self.getQuestions();
 			}
 		},
 		methods: {
-			manageMerger: function(mergerZites) {
+			manageMerger: function(mergerZites) { // TODO: Update this in other pages
 				if (!mergerZites[Router.currentParams["topicaddress"]]) {
-					page.addMerger(Router.currentParams["topicaddress"]);
+					page.addMerger(Router.currentParams["topicaddress"])
+						.then(() => {
+							this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+							this.topicAddress = Router.currentParams["topicaddress"];
+						});
+				} else {
+					this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+					this.topicAddress = Router.currentParams["topicaddress"];
 				}
-				this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+			},
+			getQuestions: function() {
+				var self = this;
+
+				page.getQuestionsUser(this.topicAddress)
+					.then((questions) => {
+						console.log(questions);
+						self.questions = questions;
+					});
 			},
 			goto: function(to) {
 				Router.navigate(to);
 			},
 			isActive: function(address) {
 				return Router.currentParams["topicaddress"] === address;
+			},
+			getDate: function(date) {
+				return moment(date).fromNow();
 			}
 		}
 	}

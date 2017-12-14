@@ -145,7 +145,7 @@ class ZeroApp extends ZeroFrame {
 
 		return this.cmdp("mergerSiteAdd", [ziteAddress])
 			.then(() => {
-				self.cmdp("mergerSiteList", [true])
+				return self.cmdp("mergerSiteList", [true])
 					.then((mergerZites) => {
 						app.mergerZites = mergerZites;
 						app.$emit('setMergerZites', mergerZites);
@@ -176,6 +176,78 @@ class ZeroApp extends ZeroFrame {
 
     unimplemented() {
         return page.cmdp("wrapperNotification", ["info", "Unimplemented!"]);
+    }
+
+    postQuestion(currentTopicAddress, title, body, tags, beforePublishCB = null) {
+    	if (!this.siteInfo.auth_address) {
+    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);
+    	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
+    		return this.cmdp("wrapperNotification", ["error", "You must choose a topic to post to."]);
+    	}
+
+    	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
+    	var content_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/content.json";
+
+    	var self = this;
+    	return this.cmdp("fileGet", { "inner_path": data_inner_path, "required": false })
+    		.then((data) => {
+    			data = JSON.parse(data);
+    			if (!data) {
+    				data = {};
+    			}
+
+    			if (!data["questions"]) data["questions"] = [];
+
+    			var date = Date.now();
+
+    			data["questions"].push({
+    				"question_id": date,
+    				"title": title,
+    				"body": body,
+    				"tags": tags,
+    				"date_added": date
+    			});
+
+    			var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+    			return self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)]);
+    		}).then((res) => {
+    			if (res === "ok") {
+    				return self.cmdp("siteSign", { "inner_path": content_inner_path });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to write to data file."]);
+    			}
+    		}).then((res) => {
+    			if (res === "ok") {
+    				if (beforePublishCB != null && typeof beforePublishCB === "function") beforePublishCB();
+    				return self.cmdp("sitePublish", { "inner_path": content_inner_path, "sign": false });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to sign user data."]);
+    			}
+    		});
+    }
+
+    getQuestionsUser(currentTopicAddress) {
+    	var auth_address = this.siteInfo.auth_address;
+    	var query = `
+    		SELECT * FROM questions
+	    		LEFT JOIN json USING (json_id)
+	    		WHERE site='${currentTopicAddress}'
+	    		AND directory='data/users/${auth_address}'
+	    		ORDER BY date_added DESC
+    	`;
+    	return this.cmdp("dbQuery", [query]);
+    }
+
+    getQuestionsTopic(currentTopicAddress) {
+    	var auth_address = this.siteInfo.auth_address;
+    	var query = `
+    		SELECT * FROM questions
+	    		LEFT JOIN json USING (json_id)
+	    		WHERE site='${currentTopicAddress}'
+	    		ORDER BY date_added DESC
+    	`;
+    	return this.cmdp("dbQuery", [query]);
     }
 }
 
