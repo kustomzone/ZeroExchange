@@ -3,15 +3,7 @@
 		<div class="row">
 	        <div class="col s12 m7 l9">
 	        	<component :is="topic_navbar" active="mine"></component>
-	        	<div class="card" v-for="question in questions">
-	        		<div class="card-content">
-	        			<span class="card-title">{{ question.title }}</span>
-	        			<p>
-	        				{{ question.body }}
-	        			</p>
-	        			<small>Published {{ getDate(question.date_added) }}</small>
-	        		</div>
-	        	</div>
+	        	<component :is="question_list_item" v-for="question in questions" :question="question" :show-name="false" :current-topic-address="topicAddress"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -21,10 +13,12 @@
 </template>
 
 <script>
+	var moment = require("moment");
 	var Router = require("../libs/router.js");
 	var TopicNavbar = require("../vue_components/topic_navbar.vue");
 	var connectedTopics = require("../vue_components/connected_topics.vue");
-	var moment = require("moment");
+
+	var QuestionListItem = require("../vue_components/question_list_item.vue");
 
 	module.exports = {
 		props: ["mergerZites"],
@@ -33,6 +27,7 @@
 			return {
 				topic_navbar: TopicNavbar,
 				connected_topics: connectedTopics,
+				question_list_item: QuestionListItem,
 				topicName: "",
 				topicAddress: "",
 				questions: []
