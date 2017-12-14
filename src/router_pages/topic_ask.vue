@@ -94,7 +94,7 @@
 				return Router.currentParams["topicaddress"] === address;
 			},
 			postQuestion: function() {
-				console.log("Post Question");
+				if (!this.topicAddress || !this.title || !this.body || !this.tags) return;
 				this.submitBtnDisabled = true;
 
 				var self = this;

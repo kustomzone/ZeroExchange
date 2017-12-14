@@ -42,7 +42,8 @@
 				connected_topics: connectedTopics,
 				topics: [
 					{ name: "ZeroExchange Meta", description: "Testing!", maintainer: "Krixano" },
-					{ name: "Development", description: "", maintainer: "Krixano" }
+					{ name: "Development", description: "", maintainer: "Krixano" },
+					{ name: "Sandbox", description: "", maintainer: "Krixano" }
 				]
 			}
 		},
@@ -60,10 +61,10 @@
 				return Object.keys(this.mergerZites);
 			},
 			getFirstHalfTopics: function() {
-				return this.topics.slice(0, this.topics.length / 2);
+				return this.topics.slice(0, (this.topics.length / 2) + 1);
 			},
 			getSecondHalfTopics: function() {
-				return this.topics.slice((this.topics.length / 2));
+				return this.topics.slice((this.topics.length / 2) + 1);
 			}
 		},
 		beforeMount: function() {
