@@ -14,7 +14,7 @@
 	    		      	</form>
 		        	</div>
 		        </nav>
-		        <component :is="question_list_item" v-for="question in questions" :question="question" :show-name="true" :current-topic-address="topicAddress"></component>
+		        <component :is="question_list_item" v-for="question in getSearchResults" :question="question" :show-name="true" :current-topic-address="topicAddress"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -42,7 +42,8 @@
 				topicName: "",
 				topicAddress: "",
 				searchInput: "",
-				questions: []
+				questions: [],
+				isSearchStrict: false // TODO
 			}
 		},
 		computed: {
@@ -57,6 +58,65 @@
 					return [];
 				}
 				return Object.keys(this.mergerZites);
+			},
+			getSearchResults: function() {
+				var list = this.questions.slice();
+
+				if (this.searchInput === "" || !this.searchInput) return list;
+
+				var words = this.searchInput.trim().split(" ");
+				var self = this;
+
+				list = list.filter(function(question) {
+					question.order = 0;
+					var matches = 0;
+
+					for (var i = 0; i < words.length; i++) {
+						var word = words[i].trim().toLowerCase();
+
+						if (question.tags && question.tags !== "" && question.tags.toLowerCase().includes(word)) {
+							question.order += 4;
+							matches++;
+							continue;
+						}
+						if (question.title && question.title.toLowerCase().includes(word)) {
+							question.order += 3;
+							matches++;
+							continue;
+						}
+						if (question.cert_user_id && word[0] === "@" && word.length > 1) {
+							var wordId = word.substring(1, word.length);
+							if (question.cert_user_id.replace(/@.*\.bit/, '').toLowerCase().includes(wordId)) {
+								question.order += 2;
+								matches++;
+								continue;
+							}
+						}
+						if (question.cert_user_id && question.cert_user_id.toLowerCase().includes(word)) {
+							question.order += 2;
+							matches++;
+							continue;
+						}
+						if (question.body && question.body.toLowerCase().includes(word)) {
+							matches++;
+							continue;
+						}
+
+						if (self.isSearchStrict) {
+							return false;
+						}
+
+						question.order--;
+					}
+					if (!self.isSearchStrict && matches === 0) return false;
+					else return true;
+				});
+				if (list.length > 1) {
+					list.sort(function(a, b) {
+						return b.order - a.order;
+					});
+				}
+				return list;
 			}
 		},
 		beforeMount: function() {

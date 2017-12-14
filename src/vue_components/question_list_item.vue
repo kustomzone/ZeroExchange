@@ -1,7 +1,7 @@
 <template>
 	<div class="card" id="question-list-item">
 		<div class="card-content">
-			<span class="card-title">{{ question.title }}</span>
+			<span class="card-title"><a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress + '/' + question.date_added" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress + '/' + question.date_added)">{{ question.title }}</a></span>
 			<p>
 				{{ question.body }}
 			</p>
