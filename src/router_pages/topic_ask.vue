@@ -94,14 +94,15 @@
 				return Router.currentParams["topicaddress"] === address;
 			},
 			postQuestion: function() {
-				if (!this.topicAddress || !this.title || !this.body || !this.tags) return;
+				if (!this.topicAddress || this.title === "" || this.body === "" || this.tags === "") return;
 				this.submitBtnDisabled = true;
 
 				var self = this;
 
 				page.postQuestion(this.topicAddress, this.title, this.body, this.tags)
-					.then(() => {
+					.then((info) => {
 						self.submitBtnDisabled = false;
+						Router.navigate(self.topicAddress + "/" + info["auth_address"] + "/" + info["id"]);
 					});
 			}
 		}

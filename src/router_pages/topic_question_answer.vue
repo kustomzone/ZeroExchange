@@ -121,7 +121,7 @@
 				return moment(date).fromNow();
 			},
 			postAnswer: function() {
-				if (!this.question || !this.topicAddress || !this.body) return;
+				if (!this.question || !this.topicAddress || this.body === "") return;
 				this.submitBtnDisabled = true;
 				var self = this;
 

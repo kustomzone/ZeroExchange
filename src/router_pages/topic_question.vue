@@ -19,6 +19,7 @@
 	        			</p>
 	        			<small>Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
 	        		</div>
+        			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()"></component>
 	        	</div>
 	        	<h5 v-if="question">Answers <small style="margin-left: 10px; font-size: 65%;"><a :href="'./?/' + topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer'" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer')">Post Answer</a></small></h5>
 	        	<div class="divider"></div>
@@ -37,6 +38,7 @@
 	var Router = require("../libs/router.js");
 	var connectedTopics = require("../vue_components/connected_topics.vue");
 	var AnswerListItem = require("../vue_components/answer_list_item.vue");
+	var CommentArea = require("../vue_components/comment_area.vue");
 
 	module.exports = {
 		props: ["mergerZites"],
@@ -45,10 +47,15 @@
 			return {
 				connected_topics: connectedTopics,
 				answer_list_item: AnswerListItem,
+				comment_area: CommentArea,
 				topicName: "",
 				topicAddress: "",
 				question: null,
-				answers: []
+				answers: [],
+				comments: [],
+				showCommentBox: false,
+				commentText: "",
+				submitBtnDisabled: false
 			}
 		},
 		computed: {
@@ -83,6 +90,7 @@
 				self.manageMerger(mergerZites);
 				self.getQuestion();
 				self.getAnswers();
+				self.getComments();
 			});
 
 			// If mergerZites is empty
@@ -90,6 +98,7 @@
 				this.manageMerger(this.mergerZites);
 				self.getQuestion();
 				self.getAnswers();
+				self.getComments();
 			}
 		},
 		methods: {
@@ -110,18 +119,24 @@
 
 				page.getQuestion(this.topicAddress, Router.currentParams["authaddress"], Router.currentParams["questionid"])
 					.then((questions) => {
-						console.log(questions);
 						self.question = questions[0];
 					});
 			},
 			getAnswers: function() {
 				var self = this;
 
-				page.getQuestionAnswers(this.topicAddress, Router.currentParams["authaddress"], Router.currentParams["questionid"])
+				page.getQuestionAnswers(this.topicAddress, Router.currentParams["questionid"], Router.currentParams["authaddress"])
 					.then((answers) => {
-						console.log(answers);
 						self.answers = answers;
 					});
+			},
+			getComments: function() {
+				var self = this;
+
+				page.getQuestionComments(this.topicAddress, Router.currentParams["questionid"], Router.currentParams["authaddress"])
+					.then((comments) => {
+						self.comments = comments;
+					})
 			},
 			goto: function(to) {
 				Router.navigate(to);

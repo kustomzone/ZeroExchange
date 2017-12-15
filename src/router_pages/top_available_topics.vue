@@ -8,13 +8,13 @@
 	        			<div class="row">
 		        			<div class="col s12 l6 collection">
 			        			<div class="collection-item" v-for="topic in getFirstHalfTopics">
-			        				<h6><a href="#">{{ topic.name }}</a></h6>
+			        				<h6><a :href="'./?/' + topic.address" v-on:click.prevent="goto(topic.address)">{{ topic.name }}</a></h6>
 			        				<small>Maintainer: {{ topic.maintainer }}</small>
 			        			</div>
 			        		</div>
 			        		<div class="col s12 l6 collection">
 			        			<div class="collection-item" v-for="topic in getSecondHalfTopics">
-			        				<h6><a href="#">{{ topic.name }}</a></h6>
+			        				<h6><a :href="'./?/' + topic.address" v-on:click.prevent="goto(topic.address)">{{ topic.name }}</a></h6>
 			        				<small>Maintainer: {{ topic.maintainer }}</small>
 			        			</div>
 			        		</div>
@@ -41,7 +41,7 @@
 			return {
 				connected_topics: connectedTopics,
 				topics: [
-					{ name: "ZeroExchange Meta", description: "Testing!", maintainer: "Krixano" },
+					{ address: "1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky", name: "ZeroExchange Meta", description: "Testing!", maintainer: "Krixano" },
 					{ name: "Development", description: "", maintainer: "Krixano" },
 					{ name: "Sandbox", description: "", maintainer: "Krixano" }
 				]
