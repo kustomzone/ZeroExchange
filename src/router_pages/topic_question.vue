@@ -14,9 +14,7 @@
 	        	<div class="card" v-if="question">
 	        		<div class="card-content">
 	        			<span class="card-title">{{ question.title }}</span>
-	        			<p>
-	        				{{ question.body }}
-	        			</p>
+	        			<div v-html="getMarkdown"></div>
 	        			<small>Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
 	        		</div>
         			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()"></component>
@@ -81,6 +79,9 @@
 			},
 			getAuthAddress: function() {
 				return this.question.directory.replace(/data\/users\//, "").replace(/\//g, "");
+			},
+			getMarkdown: function() {
+				return md.render(this.question.body);
 			}
 		},
 		beforeMount: function() {

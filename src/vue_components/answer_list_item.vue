@@ -2,9 +2,7 @@
 	<div id="answer-list-item">
 		<div class="card">
 			<div class="card-content">
-				<p>
-					{{ answer.body }}
-				</p>
+				<div v-html="getMarkdown"></div>
 				<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
 			</div>
 			<component v-if="comments" :is="comment_area" :current-topic-address="currentTopicAddress" :comments="comments" :reference-id="answer.answer_id" :reference-auth-address="getAuthAddress" reference-type="a" v-on:update="getComments()"></component>
@@ -37,6 +35,9 @@
 			},
 			getAuthAddress: function() {
 				return this.answer.directory.replace(/data\/users\//, "").replace(/\//g, "");
+			},
+			getMarkdown: function() {
+				return md.render(this.answer.body);
 			}
 		},
 		beforeMount: function() {
