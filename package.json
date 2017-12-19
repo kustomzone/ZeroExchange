@@ -1,5 +1,5 @@
 {
-  "name": "ZeroExchange",
+  "name": "zero-exchange",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/krixano/ZeroMedium.git"
+    "url": "git+https://github.com/krixano/ZeroExchange.git"
   },
   "keywords": [],
   "author": "Christian Seibold",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/krixano/ZeroMedium/issues"
+    "url": "https://github.com/krixano/ZeroExchange/issues"
   },
-  "homepage": "https://github.com/krixano/ZeroMedium#readme",
+  "homepage": "https://github.com/krixano/ZeroExchange#readme",
   "description": "",
   "devDependencies": {
     "browserify": "^14.4.0",
@@ -32,18 +32,18 @@
     "patch-package": "^4.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "vueify": "^9.4.1",
     "watchify": "^3.9.0"
   },
   "dependencies": {
     "animejs": "^2.2.0",
     "materialize-css": "^1.0.0-alpha.2",
     "medium-editor": "^5.23.2",
-    "moment": "^2.18.1",
+    "moment": "^2.20.0",
     "node-sass": "^4.7.2",
-    "sanitize-html": "^1.14.1",
-    "vue": "^2.4.2",
-    "vue-hot-reload-api": "^2.2.4"
+    "sanitize-html": "^1.16.3",
+    "vue": "^2.5.11",
+    "vue-hot-reload-api": "^2.2.4",
+    "vueify": "^9.4.1"
   },
   "browser": {
     "vue": "vue/dist/vue.common.js"

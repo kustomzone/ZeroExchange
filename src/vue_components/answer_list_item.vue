@@ -1,10 +1,13 @@
 <template>
-	<div class="card" id="answer-list-item">
-		<div class="card-content">
-			<p>
-				{{ answer.body }}
-			</p>
-			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
+	<div id="answer-list-item">
+		<div class="card">
+			<div class="card-content">
+				<p>
+					{{ answer.body }}
+				</p>
+				<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
+			</div>
+			<component v-if="comments" :is="comment_area" :current-topic-address="currentTopicAddress" :comments="comments" :reference-id="answer.answer_id" :reference-auth-address="getAuthAddress" reference-type="a" v-on:update="getComments()"></component>
 		</div>
 	</div>
 </template>
@@ -12,10 +15,17 @@
 <script>
 	var moment = require("moment");
 	var Router = require("../libs/router.js");
+	var CommentArea = require("./comment_area.vue");
 
 	module.exports = {
 		props: ["mergerZites", "answer", "showName", "currentTopicAddress"],
 		name: "answer-list-item",
+		data: () => {
+			return {
+				comment_area: CommentArea,
+				comments: []
+			};
+		},
 		computed: {
 			getName: function() {
 				if (!this.answer.cert_user_id) return "";
@@ -29,9 +39,20 @@
 				return this.answer.directory.replace(/data\/users\//, "").replace(/\//g, "");
 			}
 		},
+		beforeMount: function() {
+			this.getComments();
+		},
 		methods: {
 			goto: function(to) {
 				Router.navigate(to);
+			},
+			getComments: function() {
+				var self = this;
+
+				page.getAnswerComments(this.currentTopicAddress, this.answer.answer_id, this.getAuthAddress)
+					.then((comments) => {
+						self.comments = comments;
+					});
 			}
 		}
 	};

@@ -24,7 +24,7 @@
 	        	<h5 v-if="question">Answers <small style="margin-left: 10px; font-size: 65%;"><a :href="'./?/' + topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer'" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer')">Post Answer</a></small></h5>
 	        	<div class="divider"></div>
 
-	        	<component :is="answer_list_item" v-for="answer in answers" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer"></component>
+	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -56,7 +56,7 @@
 				showCommentBox: false,
 				commentText: "",
 				submitBtnDisabled: false
-			}
+			};
 		},
 		computed: {
 			mergerZiteValues: function() {
@@ -136,7 +136,7 @@
 				page.getQuestionComments(this.topicAddress, Router.currentParams["questionid"], Router.currentParams["authaddress"])
 					.then((comments) => {
 						self.comments = comments;
-					})
+					});
 			},
 			goto: function(to) {
 				Router.navigate(to);

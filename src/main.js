@@ -396,6 +396,20 @@ class ZeroApp extends ZeroFrame {
 
     	return this.cmdp("dbQuery", [query]);
     }
+
+    getAnswerComments(currentTopicAddress, answer_id, answer_auth_address) {
+        var query = `
+            SELECT * FROM comments
+                LEFT JOIN json USING (json_id)
+                WHERE site='${currentTopicAddress}'
+                AND reference_type='a'
+                AND reference_id=${answer_id}
+                AND reference_auth_address='${answer_auth_address}'
+                ORDER BY date_added ASC
+            `;
+
+        return this.cmdp("dbQuery", [query]);
+    }
 }
 
 page = new ZeroApp();

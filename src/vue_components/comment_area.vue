@@ -1,12 +1,12 @@
 <template>
 	<div id="commentArea">
-		<div class="card-content card-section" style="padding-top: 13px; padding-bottom: 5px;">
-			<a href="#" v-on:click.prevent="showCommentBox = !showCommentBox" style="margin-right: 5px;"><i class="material-icons" style="font-size: 1.3rem;">comment</i></a>
-			<a href="#" style="margin-right: 5px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
-			<a href="#" style="margin-right: 5px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
+		<div class="card-content card-section" style="padding-top: 13px; padding-bottom: 8px;">
+			<a href="#" v-on:click.prevent="showCommentBox = !showCommentBox" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">comment</i></a>
+			<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
+			<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
 		</div>
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
-			<div v-for="comment in comments" style="margin-bottom: 7px;">
+			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">
 				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }}</small><br>
 				{{ comment.body }}<br>
 			</div>
@@ -14,7 +14,7 @@
 		<div class="card-content card-section" v-if="showCommentBox">
 			<form v-on:submit.prevent="postComment()">
 				<div class="input-field">
-	    			<textarea rows="3" id="comment" class="materialize-textarea validate" required v-model="commentText"></textarea>
+	    			<textarea ref="commentTextArea" rows="3" id="comment" class="materialize-textarea validate" required v-model="commentText"></textarea>
 	    			<label for="comment">Question body</label>
 	    		</div>
 	    		<button type="submit" class="btn btn-small waves-effect waves-light" :class="{ 'disabled': submitBtnDisabled }">Submit</button>
@@ -52,14 +52,12 @@
 				var self = this;
 				this.submitBtnDisabled = true;
 
-				page.postComment(this.currentTopicAddress, this.referenceType, this.referenceId, this.referenceAuthAddress, this.commentText)
-					.then(() => {
-						self.submitBtnDisabled = false;
-						self.commentText = "";
-						self.$emit("update");
-						//self.getComments(); // Update comments
-						// TODO: emit update event here!
-					});
+				page.postComment(this.currentTopicAddress, this.referenceType, this.referenceId, this.referenceAuthAddress, this.commentText, () => {
+					self.submitBtnDisabled = false;
+					self.commentText = "";
+					self.$emit("update");
+					//console.log(self.$refs.commentTextArea);
+				});
 			}
 		}
 	}
