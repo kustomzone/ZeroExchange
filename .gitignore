@@ -6,4 +6,4 @@ node_modules/
 /data/users/
 *.db
 /content.json
-/merged-.*/
+/merged-.*/*
