@@ -99,11 +99,10 @@
 
 				var self = this;
 
-				page.postQuestion(this.topicAddress, this.title, this.body, this.tags)
-					.then((info) => {
-						self.submitBtnDisabled = false;
-						Router.navigate(self.topicAddress + "/" + info["auth_address"] + "/" + info["id"]);
-					});
+				page.postQuestion(this.topicAddress, this.title, this.body, this.tags, (info) => {
+					self.submitBtnDisabled = false;
+					Router.navigate(self.topicAddress + "/" + info["auth_address"] + "/" + info["id"]);
+				});
 			}
 		}
 	}

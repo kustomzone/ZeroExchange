@@ -125,10 +125,10 @@
 				this.submitBtnDisabled = true;
 				var self = this;
 
-				page.postAnswer(this.topicAddress, this.question.question_id, this.getAuthAddress, this.body)
-					.then(() => {
-						self.submitBtnDisabled = false;
-					});
+				page.postAnswer(this.topicAddress, this.question.question_id, this.getAuthAddress, this.body, () => {
+					self.submitBtnDisabled = false;
+					Router.navigate(self.getAuthAddress + "/"  + self.question.question_id);
+				});
 			}
 		}
 	}

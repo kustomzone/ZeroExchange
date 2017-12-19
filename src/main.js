@@ -210,7 +210,7 @@ class ZeroApp extends ZeroFrame {
 
     			var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 
-    			self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)])
+    			return self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)])
 					.then((res) => {
 		    			if (res === "ok") {
 		    				return self.cmdp("siteSign", { "inner_path": content_inner_path })
@@ -220,7 +220,10 @@ class ZeroApp extends ZeroFrame {
 		    							return self.cmdp("sitePublish", { "inner_path": content_inner_path, "sign": false })
 		    								.then(() => {
 		    									return { "id": date, "auth_address": self.siteInfo.auth_address };
-		    								});
+		    								}).catch((err) => {
+                                                console.log(err);
+                                                return { "id": date, "auth_address": self.siteInfo.auth_address, "err": err };
+                                            });
 		    						} else {
 		    							return self.cmdp("wrapperNotification", ["error", "Failed to sign user data."]);
 		    						}
@@ -278,6 +281,7 @@ class ZeroApp extends ZeroFrame {
     	var content_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/content.json";
 
     	var self = this;
+
     	return this.cmdp("fileGet", { "inner_path": data_inner_path, "required": false })
     		.then((data) => {
     			data = JSON.parse(data);
