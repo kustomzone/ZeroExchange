@@ -5,7 +5,10 @@ window.anime = anime;
 var Materialize = require("materialize-css/dist/js/materialize.min.js");
 
 var MarkdownIt = require("markdown-it");
-md = new MarkdownIt();
+md = new MarkdownIt({
+	html: false,
+	linkify: true
+});
 
 var ZeroFrame = require("./libs/ZeroFrame.js");
 var Router = require("./libs/router.js");
