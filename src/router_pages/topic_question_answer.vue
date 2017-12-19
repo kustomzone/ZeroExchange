@@ -127,7 +127,7 @@
 
 				page.postAnswer(this.topicAddress, this.question.question_id, this.getAuthAddress, this.body, () => {
 					self.submitBtnDisabled = false;
-					Router.navigate(self.getAuthAddress + "/"  + self.question.question_id);
+					Router.navigate(self.topicAddress + "/" + self.getAuthAddress + "/"  + self.question.question_id);
 				});
 			}
 		}
