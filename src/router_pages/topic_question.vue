@@ -13,9 +13,10 @@
         		</nav>
 	        	<div class="card" v-if="question">
 	        		<div class="card-content">
+						<div class="chip"><a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></div>
 	        			<span class="card-title">{{ question.title }}</span>
-	        			<div v-html="getMarkdown"></div>
-	        			<small>Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
+	        			<div v-html="getMarkdown" style="margin-bottom: 5px; font-size: 1.2rem;"></div>
+	        			<div>Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></div>
 	        		</div>
         			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
 						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
@@ -25,7 +26,7 @@
 	        	<h5 v-if="question">Answers <small style="margin-left: 10px; font-size: 65%;"><a :href="'./?/' + topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer'" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer')">Post Answer</a></small></h5>
 	        	<div class="divider"></div>
 
-	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner"></component>
+	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner" v-on:mark-solution="markSolution" :solution-id="question.solution_id" :solution-auth-address="question.solution_auth_address"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -153,6 +154,13 @@
 			},
 			getDate: function(date) {
 				return moment(date).fromNow();
+			},
+			markSolution: function(answer_id, answer_auth_address) {
+				var self = this;
+
+				page.questionMarkSolution(this.topicAddress, this.question.question_id, this.getAuthAddress, answer_id, answer_auth_address, function() {
+					self.getQuestion();
+				});
 			}
 		}
 	}

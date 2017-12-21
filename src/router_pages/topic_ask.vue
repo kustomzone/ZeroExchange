@@ -16,10 +16,13 @@
 			        			<textarea id="body" class="materialize-textarea validate" required v-model="body"></textarea>
 			        			<label for="body">Question body</label>
 			        		</div>
-			        		<div class="input-field">
+			        		<!--<div class="input-field">
 			        			<input id="tags" v-model="tags" type="text" class="validate" required>
 			        			<label for="tags">Tags</label>
-			        		</div>
+			        		</div>-->
+							<div class="chips chips-placeholder" ref="tags" style="margin-bottom: 0;"></div>
+							<small>Press enter to add tag</small><br>
+							<br>
 			        		<button type="submit" class="btn waves-effect waves-light" :class="{ 'disabled': submitBtnDisabled }">Submit</button>
 			        	</form>
 			        </div>
@@ -36,6 +39,7 @@
 	var Router = require("../libs/router.js");
 	var TopicNavbar = require("../vue_components/topic_navbar.vue");
 	var connectedTopics = require("../vue_components/connected_topics.vue");
+	var M = require("materialize-css");
 
 	module.exports = {
 		props: ["mergerZites"],
@@ -49,7 +53,7 @@
 				submitBtnDisabled: false,
 				title: "",
 				body: "",
-				tags: ""
+				tagsInstance: ""
 			}
 		},
 		computed: {
@@ -74,6 +78,13 @@
 				this.manageMerger(this.mergerZites);
 			}
 		},
+		mounted: function() {
+			var tags = this.$refs.tags;
+			this.tagsInstance = new M.Chips(tags, {
+				placeholder: "Enter tags",
+				secondaryPlaceholder: "+Tag"
+			});
+		},
 		methods: {
 			manageMerger: function(mergerZites) {
 				if (!mergerZites[Router.currentParams["topicaddress"]]) {
@@ -94,12 +105,22 @@
 				return Router.currentParams["topicaddress"] === address;
 			},
 			postQuestion: function() {
-				if (!this.topicAddress || this.title === "" || this.body === "" || this.tags === "") return;
+				if (!this.topicAddress || this.title === "" || this.body === "" || this.tagsInstance.chipsData.length == 0) return;
 				this.submitBtnDisabled = true;
 
 				var self = this;
 
-				page.postQuestion(this.topicAddress, this.title, this.body, this.tags, (info) => {
+				var tags = "";
+				for (var i = 0; i < this.tagsInstance.chipsData.length; i++) {
+					var chip = this.tagsInstance.chipsData[i];
+					if (i == 0) {
+						tags += chip.tag;
+					} else {
+						tags += "," + chip.tag;
+					}
+				}
+
+				page.postQuestion(this.topicAddress, this.title, this.body, tags, (info) => {
 					self.submitBtnDisabled = false;
 					Router.navigate(self.topicAddress + "/" + info["auth_address"] + "/" + info["id"]);
 				});

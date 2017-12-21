@@ -287,6 +287,62 @@ class ZeroApp extends ZeroFrame {
 		return this.cmdp("dbQuery", [query]);
 	}
 
+	questionMarkSolution(currentTopicAddress, question_id, question_auth_address, answer_id, answer_auth_address, beforePublishCB = null) {
+		if (!this.siteInfo.auth_address) {
+    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);
+    	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
+    		return this.cmdp("wrapperNotification", ["error", "You must choose a topic to post to."]);
+		}
+
+		if (question_auth_address !== this.siteInfo.auth_address) {
+			return this.cmdp("wrapperNotification", ["error", "This question does not belong to you!"]);
+		}
+		
+		var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
+		var content_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/content.json";
+		
+		var self = this;
+
+		return this.cmdp("fileGet", { "inner_path": data_inner_path, "required": false })
+			.then((data) => {
+				if (!data) return false;
+				data = JSON.parse(data);
+
+				if (!data["questions"]) return false;
+
+				var found = false;
+				for (var i = 0; i < data["questions"].length; i++) {
+					let question = data["questions"][i];
+
+					if (question.question_id == question_id) {
+						data["questions"][i]["solution_id"] = answer_id;
+						data["questions"][i]["solution_auth_address"] = answer_auth_address;
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) return false;
+
+				var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+    			return self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)]);
+			}).then((res) => {
+				if (res === "ok") {
+    				return self.cmdp("siteSign", { "inner_path": content_inner_path });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to write to data file."]);
+    			}
+			}).then((res) => {
+    			if (res === "ok") {
+    				if (beforePublishCB != null && typeof beforePublishCB === "function") beforePublishCB();
+    				return self.cmdp("sitePublish", { "inner_path": content_inner_path, "sign": false });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to sign user data."]);
+    			}
+    		});
+	}
+
     postAnswer(currentTopicAddress, question_id, question_auth_address, body, beforePublishCB = null) {
     	if (!this.siteInfo.auth_address) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);

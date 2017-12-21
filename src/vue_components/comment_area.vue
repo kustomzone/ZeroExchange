@@ -7,14 +7,14 @@
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
 			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">
 				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }}</small><br>
-				{{ comment.body }}<br>
+				<span v-html="commentMarkdown(comment)"></span>
 			</div>
 		</div>
 		<div class="card-content card-section" v-if="showCommentBox">
 			<form v-on:submit.prevent="postComment()">
 				<div class="input-field">
 	    			<textarea ref="commentTextArea" rows="3" id="comment" class="materialize-textarea validate" required v-model="commentText"></textarea>
-	    			<label for="comment">Question body</label>
+	    			<label for="comment">Comment body</label>
 	    		</div>
 	    		<button type="submit" class="btn btn-small waves-effect waves-light" :class="{ 'disabled': submitBtnDisabled }">Submit</button>
 	    	</form>
@@ -57,6 +57,9 @@
 					self.$emit("update");
 					//console.log(self.$refs.commentTextArea);
 				});
+			},
+			commentMarkdown: function(comment) {
+				return md.render(comment.body);
 			}
 		}
 	}

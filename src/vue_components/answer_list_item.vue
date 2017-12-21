@@ -2,13 +2,15 @@
 	<div id="answer-list-item">
 		<div class="card">
 			<div class="card-content">
-				<div v-html="getMarkdown"></div>
-				<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
+				<div class="chip" style="background-color: #88AA88;" v-if="isSolution">Solution</div>
+				<div class="chip" v-if="showName"><a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></div>
+				<div style="margin-bottom: 5px; font-size: 1.2rem;" v-html="getMarkdown"></div>
+				<div>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></div>
 			</div>
 			<component v-if="comments" :is="comment_area" :current-topic-address="currentTopicAddress" :comments="comments" :reference-id="answer.answer_id" :reference-auth-address="getAuthAddress" reference-type="a" v-on:update="getComments()">
 				<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
 				<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
-				<a v-if="userIsQuestionOwner && !isSolution" href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">check</i></a>
+				<a v-if="userIsQuestionOwner && !isSolution" href="#" v-on:click.prevent="markSolution" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">check</i></a>
 			</component>
 		</div>
 	</div>
@@ -64,6 +66,9 @@
 					.then((comments) => {
 						self.comments = comments;
 					});
+			},
+			markSolution: function() {
+				this.$emit("mark-solution", this.answer.answer_id, this.getAuthAddress);
 			}
 		}
 	};

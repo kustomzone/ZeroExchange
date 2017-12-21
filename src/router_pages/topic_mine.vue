@@ -79,7 +79,6 @@
 
 				page.getQuestionsUser(this.topicAddress)
 					.then((questions) => {
-						console.log(questions);
 						self.questions = questions;
 					});
 			},
