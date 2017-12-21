@@ -158,6 +158,7 @@ class ZeroApp extends ZeroFrame {
 					.then((mergerZites) => {
 						app.mergerZites = mergerZites;
 						app.$emit('setMergerZites', mergerZites);
+						self.cmdp("wrapperOpenWindow", [self.siteInfo.address]);
 					});
 			});
 	}
