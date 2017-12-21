@@ -248,6 +248,7 @@ class ZeroApp extends ZeroFrame {
 		var query = `
 			SELECT * FROM questions
 				LEFT JOIN json USING (json_id)
+				WHERE site!='1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky'
 				ORDER BY date_added DESC
 			`;
     	return this.cmdp("dbQuery", [query]);
@@ -257,6 +258,7 @@ class ZeroApp extends ZeroFrame {
 		var query = `
 			SELECT * FROM questions
 				LEFT JOIN json USING (json_id)
+				WHERE site!='1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky'
 				ORDER BY date_added DESC
 				LIMIT ${limit}
 			`;
@@ -269,6 +271,7 @@ class ZeroApp extends ZeroFrame {
 			SELECT * FROM questions
 				LEFT JOIN json USING (json_id)
 				WHERE directory='data/users/${auth_address}'
+				AND site!='1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky'
 				ORDER BY date_added DESC
 			`;
 		return this.cmdp("dbQuery", [query]);
@@ -278,7 +281,7 @@ class ZeroApp extends ZeroFrame {
     	var query = `
     		SELECT * FROM questions
     			LEFT JOIN json USING (json_id)
-    			WHERE site='${currentTopicAddress}'
+				WHERE site='${currentTopicAddress}'
     			AND directory='data/users/${auth_address}'
     			AND question_id=${question_id}
     			LIMIT 1
