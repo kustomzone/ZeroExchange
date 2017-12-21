@@ -17,12 +17,15 @@
 	        			<div v-html="getMarkdown"></div>
 	        			<small>Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
 	        		</div>
-        			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()"></component>
+        			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
+						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
+						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
+					</component>
 	        	</div>
 	        	<h5 v-if="question">Answers <small style="margin-left: 10px; font-size: 65%;"><a :href="'./?/' + topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer'" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer')">Post Answer</a></small></h5>
 	        	<div class="divider"></div>
 
-	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer"></component>
+	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -39,7 +42,7 @@
 	var CommentArea = require("../vue_components/comment_area.vue");
 
 	module.exports = {
-		props: ["mergerZites"],
+		props: ["userInfo", "mergerZites"],
 		name: "topicQuestion",
 		data: () => {
 			return {
@@ -82,6 +85,9 @@
 			},
 			getMarkdown: function() {
 				return md.render(this.question.body);
+			},
+			userIsOwner: function() {
+				return this.getAuthAddress === this.userInfo.auth_address;
 			}
 		},
 		beforeMount: function() {

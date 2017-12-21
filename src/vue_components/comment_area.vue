@@ -2,8 +2,7 @@
 	<div id="commentArea">
 		<div class="card-content card-section" style="padding-top: 13px; padding-bottom: 8px;">
 			<a href="#" v-on:click.prevent="showCommentBox = !showCommentBox" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">comment</i></a>
-			<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
-			<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
+			<slot></slot>
 		</div>
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
 			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">

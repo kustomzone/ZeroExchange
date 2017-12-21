@@ -38,7 +38,7 @@
 	var connectedTopics = require("../vue_components/connected_topics.vue");
 
 	module.exports = {
-		props: ["mergerZites"],
+		props: ["userInfo", "mergerZites"],
 		name: "topicQuestionAnswer",
 		data: () => {
 			return {

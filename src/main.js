@@ -272,9 +272,20 @@ class ZeroApp extends ZeroFrame {
 	    		LEFT JOIN json USING (json_id)
 	    		WHERE site='${currentTopicAddress}'
 	    		ORDER BY date_added DESC
-    	`;
+    		`;
     	return this.cmdp("dbQuery", [query]);
-    }
+	}
+	
+	getQuestionsTopicRecent(currentTopicAddress, limit = 5) {
+		var query = `
+			SELECT * FROM questions
+				LEFT JOIN json USING (json_id)
+				WHERE site='${currentTopicAddress}'
+				ORDER BY date_added DESC
+				LIMIT ${limit}
+			`;
+		return this.cmdp("dbQuery", [query]);
+	}
 
     postAnswer(currentTopicAddress, question_id, question_auth_address, body, beforePublishCB = null) {
     	if (!this.siteInfo.auth_address) {

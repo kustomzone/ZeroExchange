@@ -5,7 +5,11 @@
 				<div v-html="getMarkdown"></div>
 				<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
 			</div>
-			<component v-if="comments" :is="comment_area" :current-topic-address="currentTopicAddress" :comments="comments" :reference-id="answer.answer_id" :reference-auth-address="getAuthAddress" reference-type="a" v-on:update="getComments()"></component>
+			<component v-if="comments" :is="comment_area" :current-topic-address="currentTopicAddress" :comments="comments" :reference-id="answer.answer_id" :reference-auth-address="getAuthAddress" reference-type="a" v-on:update="getComments()">
+				<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
+				<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
+				<a v-if="userIsQuestionOwner && !isSolution" href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">check</i></a>
+			</component>
 		</div>
 	</div>
 </template>
@@ -16,7 +20,7 @@
 	var CommentArea = require("./comment_area.vue");
 
 	module.exports = {
-		props: ["mergerZites", "answer", "showName", "currentTopicAddress"],
+		props: ["userInfo", "mergerZites", "answer", "showName", "currentTopicAddress", "userIsQuestionOwner", "solutionId", "solutionAuthAddress"],
 		name: "answer-list-item",
 		data: () => {
 			return {
@@ -38,6 +42,12 @@
 			},
 			getMarkdown: function() {
 				return md.render(this.answer.body);
+			},
+			userIsOwner: function() {
+				return this.getAuthAddress === this.userInfo.auth_address;
+			},
+			isSolution: function() {
+				return this.getAuthAddress === this.solutionAuthAddress && this.answer.answer_id === this.solutionId;
 			}
 		},
 		beforeMount: function() {
