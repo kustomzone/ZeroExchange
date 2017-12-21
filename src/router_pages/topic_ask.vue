@@ -2,7 +2,7 @@
 	<div id="topicAsk" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="ask"></component>
+	        	<component :is="topic_navbar" active="ask" :user-info="userInfo"></component>
 	        	<div class="card">
 	        		<div class="card-content">
 	        			<span class="card-title">{{ topicName }}Ask Question</span>
@@ -42,7 +42,7 @@
 	var M = require("materialize-css");
 
 	module.exports = {
-		props: ["mergerZites"],
+		props: ["userInfo", "mergerZites"],
 		name: "topicAsk",
 		data: () => {
 			return {

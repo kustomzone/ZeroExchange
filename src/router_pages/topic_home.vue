@@ -2,12 +2,12 @@
 	<div id="topicHome" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="explore"></component>
+	        	<component :is="topic_navbar" active="explore" :user-info="userInfo"></component>
 
 				<h5>Recent</h5>
 	        	<div class="divider"></div>
 
-				<component :is="answer_list_item" v-for="question in recentQuestions" :key="question.question_id" :merger-zites="mergerZites" :question="question" :show-name="true" :current-topic-address="topicAddress"></component>
+				<component :is="question_list_item" v-for="question in recentQuestions" :key="question.question_id" :user-info="userInfo" :merger-zites="mergerZites" :question="question" :show-name="true" :current-topic-address="topicAddress"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -23,13 +23,13 @@
 	var QuestionListItem = require("../vue_components/question_list_item.vue");
 
 	module.exports = {
-		props: ["mergerZites"],
+		props: ["userInfo", "mergerZites"],
 		name: "topicHome",
 		data: () => {
 			return {
 				topic_navbar: TopicNavbar,
 				connected_topics: connectedTopics,
-				answer_list_item: QuestionListItem,
+				question_list_item: QuestionListItem,
 				topicName: "",
 				topicAddress: "",
 				recentQuestions: []

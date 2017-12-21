@@ -46,7 +46,7 @@ var Router = {
 		for (var i = 0, max = this.routes.length; i < max; i++ ) {
 			routeParams = {}
 			keys = this.routes[i].path.match(/:([^\/]+)/g);
-			match = hash.match(new RegExp(this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$)'));
+			match = hash.replace(/^\//, "").match(new RegExp("^" + this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$)'));
 			if (match) {
 				match.shift();
 				match.forEach(function (value, i) {

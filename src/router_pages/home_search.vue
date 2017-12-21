@@ -1,8 +1,8 @@
 <template>
-	<div id="topicSearch" class="container">
+	<div id="homeSearch" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="search" :user-info="userInfo" style="margin-bottom: 0;" class="z-depth-2"></component>
+	        	<component :is="home_navbar" active="search" :user-info="userInfo" style="margin-bottom: 0;" class="z-depth-2"></component>
 	        	<nav style="background-color: #1976D2; margin-bottom: 15px;">
 		        	<div class="nav-wrapper">
 		        		<form>
@@ -14,7 +14,7 @@
 	    		      	</form>
 		        	</div>
 		        </nav>
-		        <component :is="question_list_item" v-for="question in getSearchResults" :merger-zites="mergerZites" :question="question" :show-name="true" :current-topic-address="topicAddress"></component>
+		        <component :is="question_list_item" v-for="question in getSearchResults" :merger-zites="mergerZites" :question="question" :show-name="true" :show-topic-name="true"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
@@ -26,17 +26,17 @@
 <script>
 	var moment = require("moment");
 	var Router = require("../libs/router.js");
-	var TopicNavbar = require("../vue_components/topic_navbar.vue");
+	var HomeNavbar = require("../vue_components/home_navbar.vue");
 	var ConnectedTopics = require("../vue_components/connected_topics.vue");
 
 	var QuestionListItem = require("../vue_components/question_list_item.vue");
 
 	module.exports = {
 		props: ["userInfo", "mergerZites"],
-		name: "topicSearch",
+		name: "homeSearch",
 		data: () => {
 			return {
-				topic_navbar: TopicNavbar,
+				home_navbar: HomeNavbar,
 				connected_topics: ConnectedTopics,
 				question_list_item: QuestionListItem,
 				topicName: "",
@@ -72,9 +72,9 @@
 					var matches = 0;
 
 					for (var i = 0; i < words.length; i++) {
-						var word = words[i].trim().toLowerCase();
-
-						if ("solved".includes(word) && question.solution_id && question.solution_auth_address) {
+                        var word = words[i].trim().toLowerCase();
+                        
+                        if ("solved".includes(word) && question.solution_id && question.solution_auth_address) {
                             question.order += 4;
                             matches++;
                             continue;
@@ -99,6 +99,11 @@
 							}
 						}
 						if (question.cert_user_id && question.cert_user_id.toLowerCase().includes(word)) {
+							question.order += 2;
+							matches++;
+							continue;
+                        }
+                        if (question.site.toLowerCase().includes(word) || self.mergerZites[question.site].content.title.toLowerCase().includes(word)) {
 							question.order += 2;
 							matches++;
 							continue;
@@ -141,30 +146,17 @@
 		},
 		methods: {
 			manageMerger: function(mergerZites) {
-				if (!mergerZites[Router.currentParams["topicaddress"]]) {
-					page.addMerger(Router.currentParams["topicaddress"])
-						.then(() => {
-							this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
-							this.topicAddress = Router.currentParams["topicaddress"];
-						});
-				} else {
-					this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
-					this.topicAddress = Router.currentParams["topicaddress"];
-				}
 			},
 			getQuestions: function() {
 				var self = this;
 
-				page.getQuestionsTopic(this.topicAddress)
+				page.getQuestions()
 					.then((questions) => {
 						self.questions = questions;
 					});
 			},
 			goto: function(to) {
 				Router.navigate(to);
-			},
-			isActive: function(address) {
-				return Router.currentParams["topicaddress"] === address;
 			},
 			getDate: function(date) {
 				return moment(date).fromNow();

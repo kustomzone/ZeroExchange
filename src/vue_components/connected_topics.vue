@@ -4,6 +4,7 @@
     		<div class="card-content">
 	        	<span class="card-title center-align">Connected Topics</span>
 	        	<ul class="collection">
+					<a class="collection-item center-align" :class="{ 'active': isActive() }" href="./?/" v-on:click.prevent="goto('')">All</a>
 	        		<a class="collection-item center-align" :class="{ 'active': isActive(zite.address) }" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address" v-on:click.prevent="goto(zite.address)">{{ zite.content.title }}</a>
 	        	</ul>
 	        	<div class="center-align">
@@ -36,6 +37,7 @@
 		},
 		methods: {
 			isActive: function(address) {
+				if (Router.currentRoute === "/" && !Router.currentParams["topicaddress"]) return true;
 				return Router.currentParams["topicaddress"] === address;
 			},
 			goto: function(to) {

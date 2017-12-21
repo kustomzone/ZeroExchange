@@ -239,7 +239,37 @@ class ZeroApp extends ZeroFrame {
 		    			}
 		    		});
 	    	});
-    }
+	}
+	
+	getQuestions() {
+		var query = `
+			SELECT * FROM questions
+				LEFT JOIN json USING (json_id)
+				ORDER BY date_added DESC
+			`;
+    	return this.cmdp("dbQuery", [query]);
+	}
+
+	getQuestionsRecent(limit = 5) {
+		var query = `
+			SELECT * FROM questions
+				LEFT JOIN json USING (json_id)
+				ORDER BY date_added DESC
+				LIMIT ${limit}
+			`;
+		return this.cmdp("dbQuery", [query]);
+	}
+
+	getQuestionsUser() {
+		var auth_address = this.siteInfo.auth_address;
+		var query = `
+			SELECT * FROM questions
+				LEFT JOIN json USING (json_id)
+				WHERE directory='data/users/${auth_address}'
+				ORDER BY date_added DESC
+			`;
+		return this.cmdp("dbQuery", [query]);
+	}
 
     getQuestion(currentTopicAddress, auth_address, question_id) {
     	var query = `
@@ -252,28 +282,27 @@ class ZeroApp extends ZeroFrame {
     		`;
     	return this.cmdp("dbQuery", [query]);
     }
-
-    getQuestionsUser(currentTopicAddress) {
-    	var auth_address = this.siteInfo.auth_address;
-    	var query = `
-    		SELECT * FROM questions
-	    		LEFT JOIN json USING (json_id)
-	    		WHERE site='${currentTopicAddress}'
-	    		AND directory='data/users/${auth_address}'
-	    		ORDER BY date_added DESC
-    		`;
-    	return this.cmdp("dbQuery", [query]);
-    }
-
+	
     getQuestionsTopic(currentTopicAddress) {
-    	var auth_address = this.siteInfo.auth_address;
     	var query = `
-    		SELECT * FROM questions
-	    		LEFT JOIN json USING (json_id)
-	    		WHERE site='${currentTopicAddress}'
-	    		ORDER BY date_added DESC
-    		`;
+		SELECT * FROM questions
+		LEFT JOIN json USING (json_id)
+		WHERE site='${currentTopicAddress}'
+		ORDER BY date_added DESC
+		`;
     	return this.cmdp("dbQuery", [query]);
+	}
+
+	getQuestionsTopicUser(currentTopicAddress) {
+		var auth_address = this.siteInfo.auth_address;
+		var query = `
+			SELECT * FROM questions
+				LEFT JOIN json USING (json_id)
+				WHERE site='${currentTopicAddress}'
+				AND directory='data/users/${auth_address}'
+				ORDER BY date_added DESC
+			`;
+		return this.cmdp("dbQuery", [query]);
 	}
 	
 	getQuestionsTopicRecent(currentTopicAddress, limit = 5) {
@@ -488,6 +517,9 @@ class ZeroApp extends ZeroFrame {
 page = new ZeroApp();
 
 var Home = require("./router_pages/home.vue");
+var HomeRecent = require("./router_pages/home_recent.vue");
+var HomeMine = require("./router_pages/home_mine.vue");
+var HomeSearch = require("./router_pages/home_search.vue");
 var TopicHome = require("./router_pages/topic_home.vue");
 var TopicMine = require("./router_pages/topic_mine.vue");
 var TopicAsk = require("./router_pages/topic_ask.vue");
@@ -500,6 +532,9 @@ var TopAvailable = require("./router_pages/top_available_topics.vue");
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	{ route: "about", component: About },
 	{ route: "top-available", component: TopAvailable },
+	//{ route: "recent", component: HomeRecent },
+	{ route: "mine", component: HomeMine },
+	{ route: "search", component: HomeSearch },
 	{ route: ":topicaddress/:authaddress/:questionid/answer", component: TopicQuestionAnswer },
 	{ route: ":topicaddress/:authaddress/:questionid", component: TopicQuestion },
 	{ route: ":topicaddress/mine", component: TopicMine },

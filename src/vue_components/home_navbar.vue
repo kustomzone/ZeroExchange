@@ -1,8 +1,8 @@
 <template>
 	<ul id="topicNavbar" class="tabs tabs-fixed-width z-depth-2" style="background-color: #1976D2; margin-top: 10px; margin-bottom: 15px;">
-		<li class="tab waves-effect waves-light"><a class="white-text" :class="{ 'active': isActive('explore') }" v-on:click.prevent="tabClick('explore')">Explore</a></li>
+		<li class="tab waves-effect waves-light"><a class="white-text" :class="{ 'active': isActive('top') }" v-on:click.prevent="tabClick('top')">Explore</a></li>
+		<li class="tab waves-effect waves-light" v-if="false"><a class="white-text" :class="{ 'active': isActive('recent') }" v-on:click.prevent="tabClick('recent')">Recent</a></li>
 		<li class="tab waves-effect waves-light" v-show="userInfo || active == 'mine'"><a class="white-text" :class="{ 'active': isActive('mine') }" v-on:click.prevent="tabClick('mine')">Mine</a></li>
-		<li class="tab waves-effect waves-light" v-show="userInfo || active == 'ask'"><a class="white-text" :class="{ 'active': isActive('ask') }" v-on:click.prevent="tabClick('ask')">Ask</a></li>
 		<li class="tab waves-effect waves-light"><a class="white-text" :class="{ 'active': isActive('search') }" v-on:click.prevent="tabClick('search')">Search</a></li>
 	</ul>
 </template>
@@ -25,10 +25,10 @@
 			},
 			tabClick: function(tabName) {
 				if (tabName === this.active) return false; // TODO: Do refresh here instead? Router.refresh() 
-				if (tabName === "explore") {
-					Router.navigate(Router.currentParams["topicaddress"]);
+				if (tabName === "top") {
+					Router.navigate();
 				} else {
-					Router.navigate(Router.currentParams["topicaddress"] + "/" + tabName);
+					Router.navigate(tabName);
 				}
 				return false;
 			}

@@ -6,6 +6,7 @@
 
 <script>
 	module.exports = {
+		props: ["userInfo"],
 		name: "about",
 		data: () => {
 			return {

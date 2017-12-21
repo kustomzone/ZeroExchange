@@ -2,7 +2,7 @@
 	<div id="topicMine" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="mine"></component>
+	        	<component :is="topic_navbar" active="mine" :user-info="userInfo"></component>
 	        	<component :is="question_list_item" v-for="question in questions" :question="question" :show-name="false" :current-topic-address="topicAddress"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
@@ -21,7 +21,7 @@
 	var QuestionListItem = require("../vue_components/question_list_item.vue");
 
 	module.exports = {
-		props: ["mergerZites"],
+		props: ["userInfo", "mergerZites"],
 		name: "topicMine",
 		data: () => {
 			return {
@@ -77,7 +77,7 @@
 			getQuestions: function() {
 				var self = this;
 
-				page.getQuestionsUser(this.topicAddress)
+				page.getQuestionsTopicUser(this.topicAddress)
 					.then((questions) => {
 						self.questions = questions;
 					});

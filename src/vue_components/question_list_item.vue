@@ -1,11 +1,13 @@
 <template>
 	<div class="card" id="question-list-item">
 		<div class="card-content">
-			<span class="card-title"><a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress + '/' + question.date_added" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress + '/' + question.date_added)">{{ question.title }}</a></span>
+			<span class="card-title">
+				<a :href="'./?/' + getTopicAddress + '/' + getAuthAddress + '/' + question.date_added" v-on:click.prevent="goto(getTopicAddress + '/' + getAuthAddress + '/' + question.date_added)">{{ question.title }}</a>
+			</span>
 			<p class="truncate">
 				{{ bodyMarkdownStriped }}
 			</p>
-			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></small>
+			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + getTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(getTopicAddress + '/' + getAuthAddress)">{{ getName }}</a><span v-if="showTopicName"> on <a :href="'./?/' + getTopicAddress" v-on:click.prevent="goto(getTopicAddress)">{{ getTopicName }}</a></span></span></small>
 		</div>
 	</div>
 </template>
@@ -15,7 +17,7 @@
 	var Router = require("../libs/router.js");
 
 	module.exports = {
-		props: ["mergerZites", "question", "showName", "currentTopicAddress"],
+		props: ["mergerZites", "question", "showName", "showTopicName", "currentTopicAddress"],
 		name: "question-list-item",
 		computed: {
 			getName: function() {
@@ -36,6 +38,12 @@
 					.replace(/~(\S(?:.*\S)?)~/, "$1").replace(/~~(\S(?:.*\S)?)~~/, "$1") // Remove strikethrough
 					.replace(/`(\S(?:.*\S)?)`/, "|$1|(code)") // Remove code symbols
 					.replace(/\[(\S(?:.*\S)?)\]\(\S(?:.*\S)?\)/, "| $1 | (link)"); // Remove link
+			},
+			getTopicName: function() {
+				return this.mergerZites[this.question.site].content.title;
+			},
+			getTopicAddress: function() {
+				return this.question.site;
 			}
 		},
 		methods: {
