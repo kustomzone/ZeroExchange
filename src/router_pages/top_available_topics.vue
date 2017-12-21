@@ -19,7 +19,7 @@
 			        			</div>
 			        		</div>
 			        	</div>
-	        			<small><a>Request a topic be added</a></small>
+	        			<small><a>Request a topic be added by ZeroMailing me at krixano@zeroid.bit</a></small>
 	        		</div>
 	        	</div>
 	        </div>
