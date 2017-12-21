@@ -543,12 +543,12 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	//{ route: "recent", component: HomeRecent },
 	{ route: "mine", component: HomeMine },
 	{ route: "search", component: HomeSearch },
-	{ route: ":topicaddress/:authaddress/:questionid/answer", component: TopicQuestionAnswer },
-	{ route: ":topicaddress/:authaddress/:questionid", component: TopicQuestion },
-	{ route: ":topicaddress/:authaddress", component: TopicUser },
 	{ route: ":topicaddress/mine", component: TopicMine },
 	{ route: ":topicaddress/ask", component: TopicAsk },
 	{ route: ":topicaddress/search", component: TopicSearch },
+	{ route: ":topicaddress/:authaddress/:questionid/answer", component: TopicQuestionAnswer },
+	{ route: ":topicaddress/:authaddress/:questionid", component: TopicQuestion },
+	{ route: ":topicaddress/:authaddress", component: TopicUser },
 	{ route: ":topicaddress", component: TopicHome },
 	{ route: "", component: Home }
 ]);
