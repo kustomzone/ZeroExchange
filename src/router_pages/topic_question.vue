@@ -98,7 +98,7 @@
 			this.$parent.$on("setMergerZites", function(mergerZites) {
 				self.manageMerger(mergerZites);
 				self.getQuestion();
-				self.getAnswers();
+				//self.getAnswers();
 				self.getComments();
 			});
 
@@ -106,7 +106,7 @@
 			if (this.mergerZites && Object.keys(this.mergerZites).length != 0 && this.mergerZites.constructor === Object) {
 				this.manageMerger(this.mergerZites);
 				self.getQuestion();
-				self.getAnswers();
+				//self.getAnswers();
 				self.getComments();
 			}
 		},
@@ -129,14 +129,22 @@
 				page.getQuestion(this.topicAddress, Router.currentParams["authaddress"], Router.currentParams["questionid"])
 					.then((questions) => {
 						self.question = questions[0];
+						self.getAnswers();
 					});
 			},
 			getAnswers: function() {
 				var self = this;
+				var solution_id = self.question.solution_id;
+				var solution_auth_address = self.question.solution_auth_address;
 
 				page.getQuestionAnswers(this.topicAddress, Router.currentParams["questionid"], Router.currentParams["authaddress"])
 					.then((answers) => {
-						self.answers = answers;
+						self.answers = answers.sort(function(a, b) {
+							var a_auth_address = a.directory.replace(/data\/users\//, "").replace(/\//g, "");
+							var b_auth_address = b.directory.replace(/data\/users\//, "").replace(/\//g, "");
+							console.log(((b.answer_id == solution_id && b_auth_address) == solution_auth_address ? 1 : 0) - ((a.answer_id == solution_id && a_auth_address == solution_auth_address) ? 1 : 0));
+							return ((b.answer_id == solution_id && b_auth_address == solution_auth_address) ? 1 : 0) - ((a.answer_id == solution_id && a_auth_address == solution_auth_address) ? 1 : 0);
+						});
 					});
 			},
 			getComments: function() {
