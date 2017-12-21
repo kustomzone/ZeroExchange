@@ -300,8 +300,8 @@ class ZeroApp extends ZeroFrame {
     	return this.cmdp("dbQuery", [query]);
 	}
 
-	getQuestionsTopicUser(currentTopicAddress) {
-		var auth_address = this.siteInfo.auth_address;
+	getQuestionsTopicUser(currentTopicAddress, user_auth_address = null) {
+		var auth_address = user_auth_address || this.siteInfo.auth_address;
 		var query = `
 			SELECT * FROM questions
 				LEFT JOIN json USING (json_id)
@@ -533,6 +533,7 @@ var TopicAsk = require("./router_pages/topic_ask.vue");
 var TopicSearch = require("./router_pages/topic_search.vue");
 var TopicQuestion = require("./router_pages/topic_question.vue");
 var TopicQuestionAnswer = require("./router_pages/topic_question_answer.vue");
+var TopicUser = require("./router_pages/topic_user.vue");
 var About = require("./router_pages/about.vue");
 var TopAvailable = require("./router_pages/top_available_topics.vue");
 
@@ -544,6 +545,7 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
 	{ route: "search", component: HomeSearch },
 	{ route: ":topicaddress/:authaddress/:questionid/answer", component: TopicQuestionAnswer },
 	{ route: ":topicaddress/:authaddress/:questionid", component: TopicQuestion },
+	{ route: ":topicaddress/:authaddress", component: TopicUser },
 	{ route: ":topicaddress/mine", component: TopicMine },
 	{ route: ":topicaddress/ask", component: TopicAsk },
 	{ route: ":topicaddress/search", component: TopicSearch },

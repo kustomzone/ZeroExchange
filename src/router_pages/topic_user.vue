@@ -1,8 +1,17 @@
 <template>
-	<div id="topicMine" class="container">
+	<div id="topicUser" class="container">
 		<div class="row">
 	        <div class="col s12 m7 l9">
-	        	<component :is="topic_navbar" active="mine" :user-info="userInfo"></component>
+	        	<!--<component :is="topic_navbar" active="mine" :user-info="userInfo"></component>-->
+                <nav style="margin-top: 10px; margin-bottom: 15px; background-color: #1976D2;">
+	        	    <div class="nav-wrapper">
+	        	    	<div class="col s12">
+		        	        <a :href="'./?/' + topicAddress" v-on:click.prevent="goto(topicAddress)" class="breadcrumb">{{ topicName.slice(0, topicName.length - 3) }}</a>
+		        	        <a :href="'./?/' + topicAddress + '/' + userAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + userAuthAddress)" class="breadcrumb" v-if="userName">{{ userName }}</a>
+	        	    	</div>
+	        	    </div>
+        		</nav>
+
 	        	<component :is="question_list_item" v-for="question in questions" :question="question" :show-name="false" :current-topic-address="topicAddress"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
@@ -22,14 +31,16 @@
 
 	module.exports = {
 		props: ["userInfo", "mergerZites"],
-		name: "topicMine",
+		name: "topicUser",
 		data: () => {
 			return {
 				topic_navbar: TopicNavbar,
 				connected_topics: connectedTopics,
 				question_list_item: QuestionListItem,
 				topicName: "",
-				topicAddress: "",
+                topicAddress: "",
+                userAuthAddress: "",
+                userName: "",
 				questions: []
 			}
 		},
@@ -48,7 +59,9 @@
 			}
 		},
 		beforeMount: function() {
-			var self = this;
+            var self = this;
+            
+            self.userAuthAddress = Router.currentParams["authaddress"];
 
 			this.$parent.$on("setMergerZites", function(mergerZites) {
 				self.manageMerger(mergerZites);
@@ -77,9 +90,12 @@
 			getQuestions: function() {
 				var self = this;
 
-				page.getQuestionsTopicUser(this.topicAddress)
+				page.getQuestionsTopicUser(this.topicAddress, this.userAuthAddress)
 					.then((questions) => {
-						self.questions = questions;
+                        self.questions = questions;
+                        if (questions.length > 0) {
+                            self.userName = questions[0].cert_user_id;
+                        }
 					});
 			},
 			goto: function(to) {
