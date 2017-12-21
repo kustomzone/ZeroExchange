@@ -5,7 +5,7 @@
 	        	<span class="card-title center-align">Connected Topics</span>
 	        	<ul class="collection">
 					<a class="collection-item center-align" :class="{ 'active': isActive() }" href="./?/" v-on:click.prevent="goto('')">All</a>
-	        		<a class="collection-item center-align" :class="{ 'active': isActive(zite.address) }" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address" v-on:click.prevent="goto(zite.address)">{{ zite.content.title }}</a>
+	        		<a class="collection-item center-align" :class="{ 'active': isActive(zite.address) }" v-for="zite in mergerZiteValues" :href="'./?/' + zite.address">{{ zite.content.title }}</a>
 	        	</ul>
 	        	<div class="center-align">
 	        		<a href="./?/top-available" v-on:click.prevent="goto('top-available')">Top Available Topics</a>

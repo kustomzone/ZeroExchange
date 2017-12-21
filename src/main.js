@@ -117,7 +117,7 @@ class ZeroApp extends ZeroFrame {
 					self.cmdp("mergerSiteList", [true])
 						.then((mergerZites) => {
 							console.log(mergerZites);
-							if (!mergerZites["1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky"]) {
+							if (!mergerZites["17PRT7jHB4TN1PMzgWbxDQYrUnWKX2bNcM"]) {
 								/*self.cmdp("mergerSiteAdd", ["1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky"])
 									.then(() => {
 										self.cmdp("mergerSiteList", [true])
@@ -125,7 +125,10 @@ class ZeroApp extends ZeroFrame {
 												app.mergerZites = mergerZites;
 											});
 									});*/
-								self.addMerger("1HhFcVz9sKDYes1oM6pUbqoVDnURr48mky");
+								self.addMerger("17PRT7jHB4TN1PMzgWbxDQYrUnWKX2bNcM")
+									.then(() => {
+										return self.cmdp("wrapperNotification", ["info", "You may need to refresh to see the Sandbox topic."]);
+									});
 							} else {
 								app.mergerZites = mergerZites;
 								app.$emit('setMergerZites', mergerZites);
