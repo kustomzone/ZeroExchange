@@ -46,6 +46,7 @@
 				return md.render(this.answer.body);
 			},
 			userIsOwner: function() {
+				if (!this.userInfo) return false;
 				return this.getAuthAddress === this.userInfo.auth_address;
 			},
 			isSolution: function() {

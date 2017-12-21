@@ -88,6 +88,7 @@
 				return md.render(this.question.body);
 			},
 			userIsOwner: function() {
+				if (!this.userInfo) return false;
 				return this.getAuthAddress === this.userInfo.auth_address;
 			}
 		},
