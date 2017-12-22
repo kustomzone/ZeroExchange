@@ -50,6 +50,10 @@
 		beforeMount: function() {
 			var self = this;
 
+			this.$parent.$on("update", function() {
+				self.getQuestions();
+			});
+
 			this.$parent.$on("setMergerZites", function(mergerZites) {
 				self.manageMerger(mergerZites);
 				self.getQuestions();

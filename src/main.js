@@ -170,7 +170,9 @@ class ZeroApp extends ZeroFrame {
 			app.getUserInfo();
 		}
 
-		if (message && message.params && message.params.event && message.params.event[0] === "file_done") {
+		if (message.params.event[0] === "file_done") {
+			console.log("Test");
+			app.$emit("update");
 		}
 
 		Router.listenForBack(cmd, message);

@@ -54,6 +54,12 @@
 			}
 		},
 		beforeMount: function() {
+			var self = this;
+
+			this.$parent.$on("update", function() {
+				self.getComments();
+			});
+
 			this.getComments();
 		},
 		methods: {

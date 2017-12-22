@@ -95,6 +95,12 @@
 		beforeMount: function() {
 			var self = this;
 
+			this.$parent.$on("update", function() {
+				self.getQuestion();
+				self.getComments();
+				self.$emit("update");
+			});
+
 			this.$parent.$on("setMergerZites", function(mergerZites) {
 				self.manageMerger(mergerZites);
 				self.getQuestion();

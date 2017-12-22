@@ -32,12 +32,12 @@
 				return this.question.directory.replace(/data\/users\//, "").replace(/\//g, "");
 			},
 			bodyMarkdownStriped: function() {
-				return this.question.body.replace(/(?:\r\n|\r|\n|^)\s*[#+\-*1-9a-z]\.?\s+/, " ").replace(/(?:\r\n|\r|\n|^)```(.*)(?:\r\n|\r|\n|$)(.*)(?:\r\n|\r|\n|^)```(.*)(?:\r\n|\r|\n|$)/, "| $2 | (code: $1)") // Remove markdown symbols that appear at begining of lines, including code
-					.replace(/\*(\S(?:.*\S)?)\*/, "$1").replace(/_(\S(?:.*\S)?)_/, "$1") // Remove bold (Note that $1 in replace string denotes the first group from the regex)
-					.replace(/\*\*(\S(?:.*\S)?)\*\*/, "$1").replace(/__(\S(?:.*\S)?)__/, "$1") // Remove italics
-					.replace(/~(\S(?:.*\S)?)~/, "$1").replace(/~~(\S(?:.*\S)?)~~/, "$1") // Remove strikethrough
-					.replace(/`(\S(?:.*\S)?)`/, "|$1|(code)") // Remove code symbols
-					.replace(/\[(\S(?:.*\S)?)\]\(\S(?:.*\S)?\)/, "| $1 | (link)"); // Remove link
+				return this.question.body.replace(/(?:\r\n|\r|\n|^)\s*[#+\-*1-9a-z]\.?\s+/g, " ").replace(/(?:\r\n|\r|\n|^)```(.*)(?:\r\n|\r|\n|$)(.*)(?:\r\n|\r|\n|^)```(.*)(?:\r\n|\r|\n|$)/g, "| $2 | (code: $1)") // Remove markdown symbols that appear at begining of lines, including code
+					.replace(/\*(\S(?:.*\S)?)\*/g, "$1").replace(/_(\S(?:.*\S)?)_/g, "$1") // Remove bold (Note that $1 in replace string denotes the first group from the regex)
+					.replace(/\*\*(\S(?:.*\S)?)\*\*/g, "$1").replace(/__(\S(?:.*\S)?)__/g, "$1") // Remove italics
+					.replace(/~(\S(?:.*\S)?)~/g, "$1").replace(/~~(\S(?:.*\S)?)~~/g, "$1") // Remove strikethrough
+					.replace(/`(\S(?:.*\S)?)`/g, "|$1|(code)") // Remove code symbols
+					.replace(/\[(\S(?:.*\S)?)\]\(\S(?:.*\S)?\)/g, "| $1 | (link)"); // Remove link
 			},
 			getTopicName: function() {
 				return this.mergerZites[this.question.site].content.title;

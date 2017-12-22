@@ -52,6 +52,11 @@
 		beforeMount: function() {
 			var self = this;
 
+			this.$parent.$on("update", function() {
+				console.log("Test");
+				self.getRecent();
+			});
+
 			this.$parent.$on("setMergerZites", function(mergerZites) {
 				self.manageMerger(mergerZites);
 				self.getRecent();

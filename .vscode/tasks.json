@@ -7,6 +7,11 @@
             "type": "gulp",
             "task": "scripts",
             "problemMatcher": []
+        },
+        {
+            "type": "gulp",
+            "task": "styles",
+            "problemMatcher": []
         }
     ]
 }
