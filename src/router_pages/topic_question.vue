@@ -14,9 +14,9 @@
 	        	<div class="card" v-if="question">
 	        		<div class="card-content">
 						<div class="chip"><a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></div>
-	        			<span class="card-title">{{ question.title }}</span>
-	        			<div v-html="getMarkdown" style="margin-bottom: 5px; font-size: 1.2rem;"></div>
-	        			<div>Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></div>
+	        			<span class="card-title" style="margin-left: 10px;">{{ question.title }}</span>
+	        			<div v-html="getMarkdown" style="margin-bottom: 5px; margin-left: 10px; font-size: 1.2rem;"></div>
+	        			<div style="margin-left: 10px;">Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></div>
 	        		</div>
         			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
 						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>

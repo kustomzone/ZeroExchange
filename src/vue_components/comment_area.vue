@@ -6,8 +6,8 @@
 		</div>
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
 			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">
-				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }}</small><br>
-				<span v-html="commentMarkdown(comment)"></span>
+				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }}</small>
+				<div style="margin-left: 10px;" v-html="commentMarkdown(comment)"></div>
 			</div>
 		</div>
 		<div class="card-content card-section" v-if="showCommentBox">
@@ -59,7 +59,7 @@
 				});
 			},
 			commentMarkdown: function(comment) {
-				return md.render(comment.body);
+				return md.render(comment.body).replace(/(?:(>)|(^|\s|\r\n|\r|\n))(\s*(?:@\S+:?)\s*)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$3$5</strong>$4");
 			}
 		}
 	}
