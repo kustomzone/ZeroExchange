@@ -59,7 +59,7 @@
 				});
 			},
 			commentMarkdown: function(comment) {
-				return md.render(comment.body).replace(/(?:(>)|(^|\s|\r\n|\r|\n))(@\S+(?:\'s)?:?)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$3$5</strong>$4").replace(/(?:>)(\S+(?:\'s)?:)(?:(<)|(\s|$|\r\n|\r|\n))/g, "><strong>$1$3</strong>$2");
+				return md.render(comment.body).replace(/(?:(>)|(^|\s|\r\n|\r|\n))(@\S+(?:\'s)?:?)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$3$5</strong>$4").replace(/(<(?:p|li|blockquote)>)(\S+(?:\'s)?:)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$4</strong>$3");
 			}
 		}
 	}
