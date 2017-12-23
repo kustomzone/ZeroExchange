@@ -44,7 +44,8 @@
 					{ address: "1KkJtNt2WT7QXaa4L9iPKE6Ec3E5LM4GX3", name: "ZeroExchange Meta", description: "Testing!", maintainer: "Krixano" },
 					{ address: "1HfXMzGHoz36sQBw7WqLSdxwq1agwWVR27", name: "Development", description: "", maintainer: "Krixano" },
 					{ address: "1G3ZY8Un3GzB5U3ud9A3ddpng4dFRmmuC6", name: "Development Meta", description: "", maintainer: "Krixano" },
-					{ address: "17PRT7jHB4TN1PMzgWbxDQYrUnWKX2bNcM", name: "Sandbox", description: "", maintainer: "Krixano" }
+					{ address: "17PRT7jHB4TN1PMzgWbxDQYrUnWKX2bNcM", name: "Sandbox", description: "", maintainer: "Krixano" },
+					{ address: "1J29rTU6VTtJQXkBPZzTZPjogdGNpfcBkr", name: "ZeroNet", description: "", maintainer: "Krixano" }
 				]
 			}
 		},

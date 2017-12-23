@@ -164,6 +164,7 @@ class ZeroApp extends ZeroFrame {
 	}
 
 	onRequest(cmd, message) {
+		Router.listenForBack(cmd, message);
 		if (cmd === "setSiteInfo") {
 			this.siteInfo = message.params;
 			app.siteInfo = message.params;
@@ -171,11 +172,8 @@ class ZeroApp extends ZeroFrame {
 		}
 
 		if (message.params.event[0] === "file_done") {
-			console.log("Test");
 			app.$emit("update");
 		}
-
-		Router.listenForBack(cmd, message);
 	}
 
 	selectUser() {
