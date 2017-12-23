@@ -43,7 +43,7 @@
 				return this.answer.directory.replace(/data\/users\//, "").replace(/\//g, "");
 			},
 			getMarkdown: function() {
-				return md.render(this.answer.body);
+				return md.render(this.answer.body).replace(/(?:(>)|(^|\s|\r\n|\r|\n))(@\S+(?:\'s)?:?)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$3$5</strong>$4").replace(/(<(?:p|li|blockquote)>)(\S+(?:\'s)?:)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$4</strong>$3");
 			},
 			userIsOwner: function() {
 				if (!this.userInfo) return false;
