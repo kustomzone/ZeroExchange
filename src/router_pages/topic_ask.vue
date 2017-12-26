@@ -87,12 +87,14 @@
 		},
 		methods: {
 			manageMerger: function(mergerZites) {
+				if (this.topicAddress !== "" && this.topicName !== "") return;
+				var self = this;
 				if (!mergerZites[Router.currentParams["topicaddress"]]) {
 					page.addMerger(Router.currentParams["topicaddress"])
-						.then(() => {
-							this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
-							this.topicAddress = Router.currentParams["topicaddress"];
-						});
+						.then((mergerZites) => {
+							self.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+							self.topicAddress = Router.currentParams["topicaddress"];
+						}); // This will emit the 'setMergerZites' function, which will call the managerMerger function again.
 				} else {
 					this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
 					this.topicAddress = Router.currentParams["topicaddress"];
@@ -100,9 +102,6 @@
 			},
 			goto: function(to) {
 				Router.navigate(to);
-			},
-			isActive: function(address) {
-				return Router.currentParams["topicaddress"] === address;
 			},
 			postQuestion: function() {
 				if (!this.topicAddress || this.title === "" || this.body === "" || this.tagsInstance.chipsData.length == 0) return;

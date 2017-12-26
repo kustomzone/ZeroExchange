@@ -158,6 +158,7 @@ class ZeroApp extends ZeroFrame {
 					.then((mergerZites) => {
 						app.mergerZites = mergerZites;
 						app.$emit('setMergerZites', mergerZites);
+						return mergerZites;
 						//self.cmdp("wrapperOpenWindow", [self.siteInfo.address]);
 					});
 			});
@@ -189,7 +190,7 @@ class ZeroApp extends ZeroFrame {
     }
 
     postQuestion(currentTopicAddress, title, body, tags, beforePublishCB = null) {
-    	if (!this.siteInfo.auth_address) {
+    	if (!this.siteInfo.cert_user_id) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);
     	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
     		return this.cmdp("wrapperNotification", ["error", "You must choose a topic to post to."]);
@@ -380,7 +381,7 @@ class ZeroApp extends ZeroFrame {
 	}
 
     postAnswer(currentTopicAddress, question_id, question_auth_address, body, beforePublishCB = null) {
-    	if (!this.siteInfo.auth_address) {
+    	if (!this.siteInfo.cert_user_id) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);
     	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
     		return this.cmdp("wrapperNotification", ["error", "You must choose a topic to post to."]);
@@ -443,7 +444,7 @@ class ZeroApp extends ZeroFrame {
     }
 
     postComment(currentTopicAddress, reference_type, reference_id, reference_auth_address, body, beforePublishCB = null) {
-    	if (!this.siteInfo.auth_address) {
+    	if (!this.siteInfo.cert_user_id) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);
     	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
     		return this.cmdp("wrapperNotification", ["error", "You must choose a topic to post to."]);

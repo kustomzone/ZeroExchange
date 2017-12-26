@@ -70,11 +70,13 @@
 		},
 		methods: {
 			manageMerger: function(mergerZites) {
+				if (this.topicAddress !== "" && this.topicName !== "") return;
+				var self = this;
 				if (!mergerZites[Router.currentParams["topicaddress"]]) {
 					page.addMerger(Router.currentParams["topicaddress"])
-						.then(() => {
-							this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
-							this.topicAddress = Router.currentParams["topicaddress"];
+						.then((mergerZites) => {
+							self.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
+							self.topicAddress = Router.currentParams["topicaddress"];
 						});
 				} else {
 					this.topicName = mergerZites[Router.currentParams["topicaddress"]].content.title + " - ";
