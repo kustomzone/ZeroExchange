@@ -7,7 +7,7 @@
 	        	    <div class="nav-wrapper">
 	        	    	<div class="col s12">
 		        	        <a :href="'./?/' + topicAddress" v-on:click.prevent="goto(topicAddress)" class="breadcrumb">{{ topicName.slice(0, topicName.length - 3) }}</a>
-		        	        <a :href="'./?/' + topicAddress + '/' + userAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + userAuthAddress)" class="breadcrumb" v-if="userName">{{ userName }}</a>
+		        	        <a :href="'./?/' + topicAddress + '/' + userAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + userAuthAddress)" class="breadcrumb" v-if="userName">{{ getName }}</a>
 	        	    	</div>
 	        	    </div>
         		</nav>
@@ -56,6 +56,11 @@
 					return [];
 				}
 				return Object.keys(this.mergerZites);
+			},
+			getName: function() {
+				if (!this.userName) return "";
+				var name = this.userName.replace(/@.+/, "");
+				return name[0].toUpperCase() + name.slice(1);
 			}
 		},
 		beforeMount: function() {
