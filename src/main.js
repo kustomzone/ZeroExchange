@@ -527,7 +527,7 @@ class ZeroApp extends ZeroFrame {
 				}
 				
 				for (var i = 0; i < data["answers"].length; i++) {
-					var answers = data["answers"][i];
+					var answer = data["answers"][i];
 					if (answer.answer_id == answer_id) {
 						data["answers"].splice(i, 1);
 						break;

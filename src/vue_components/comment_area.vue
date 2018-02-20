@@ -6,7 +6,7 @@
 		</div>
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
 			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">
-				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }} <em v-if="userIsOwner(comment)"> | <a href="#">Edit</a> | <a v-on:click.prevent="deleteComment(comment)"> Delete</a></em></small>
+				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }} <em v-if="userIsOwner(comment)"> | <a href="#">Edit</a> | <a href="#" v-on:click.prevent="deleteComment(comment)"> Delete</a></em></small>
 				<div style="margin-left: 10px;" v-html="commentMarkdown(comment)"></div>
 			</div>
 		</div>
@@ -59,6 +59,7 @@
 				});
 			},
 			deleteComment: function(comment) {
+				if (!userIsOwner(comment)) return;
 				if (!this.currentTopicAddress || this.currentTopicAddress === "") {
 					console.log("[comment_area.vue deleteComment] ERROR!");
 					return;

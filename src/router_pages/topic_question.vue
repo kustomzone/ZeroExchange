@@ -26,7 +26,7 @@
 	        	<h5 v-if="question">Answers <small style="margin-left: 10px; font-size: 65%;"><a :href="'./?/' + topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer'" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer')">Post Answer</a></small></h5>
 	        	<div class="divider"></div>
 
-	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner" v-on:mark-solution="markSolution" :solution-id="question.solution_id" :solution-auth-address="question.solution_auth_address"></component>
+	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner" v-on:mark-solution="markSolution" v-on:update="getAnswers" :solution-id="question.solution_id" :solution-auth-address="question.solution_auth_address"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
