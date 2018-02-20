@@ -4,8 +4,29 @@
 			<div class="card-content">
 				<div class="chip" style="background-color: #88AA88;" v-if="isSolution">Solution</div>
 				<div class="chip" v-if="showName"><a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></div>
-				<div style="margin-bottom: 5px; font-size: 1.2rem; margin-left: 10px;" v-html="getMarkdown"></div>
-				<div style="margin-left: 10px;">Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span> <em v-if="userIsOwner"> | <a href="#">Edit</a> | <a href="#" v-on:click.prevent="deleteAnswer()"> Delete</a></em></div>
+				
+				<div style="margin-bottom: 5px; font-size: 1.2rem; margin-left: 10px;" v-html="getMarkdown" v-if="!isEditing"></div>
+				<div v-else>
+					<form v-on:submit.prevent="editComment()">
+						<div class="input-field">
+							<textarea rows="2" :id="'editAnswer_' + answer.answer_id" class="materialize-textarea validate" required v-model="editText"></textarea>
+							<label :for="'editAnswer_' + answer.answer_id" class="active">Answer body</label>
+						</div>
+					</form>
+				</div>
+
+				<div style="margin-left: 10px;">
+					Published {{ getDate }} 
+					<span v-if="showName">by <a :href="'./?/' + currentTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(currentTopicAddress + '/' + getAuthAddress)">{{ getName }}</a></span>
+					<em v-if="userIsOwner"> | 
+						<a href="#" v-on:click.prevent="showEdit()" v-if="!isEditing">Edit</a> 
+						<span v-else>
+							<a href="#" v-on:click.prevent="editAnswer()">Save</a> | 
+							<a href="#" v-on:click.prevent="isEditing = false;">Cancel</a>
+						</span> | 
+						<a href="#" v-on:click.prevent="deleteAnswer()"> Delete</a>
+					</em>
+				</div>
 			</div>
 			<component v-if="comments" :is="comment_area" :user-info="userInfo" :current-topic-address="currentTopicAddress" :comments="comments" :reference-id="answer.answer_id" :reference-auth-address="getAuthAddress" reference-type="a" v-on:update="getComments()">
 				<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
@@ -27,7 +48,10 @@
 		data: () => {
 			return {
 				comment_area: CommentArea,
-				comments: []
+				comments: [],
+				isEditing: false,
+				editText: "",
+				saveBtnDisabled: false
 			};
 		},
 		computed: {
@@ -77,6 +101,19 @@
 			markSolution: function() {
 				this.$emit("mark-solution", this.answer.answer_id, this.getAuthAddress);
 			},
+			editAnswer() {
+				if (this.saveBtnDisabled) return;
+				if (!this.currentTopicAddress || this.currentTopicAddress == "" || this.editText == "")
+					return;
+				this.saveBtnDisabled = true;
+
+				var self = this;
+				page.editAnswer(this.currentTopicAddress, this.answer.answer_id, this.editText, () => {
+                        self.saveBtnDisabled = false;
+                        self.isEditing = false;
+                        self.$emit("update");
+                    });
+			},
 			deleteAnswer() {
 				if (!this.userIsOwner) return;
 				if (!this.currentTopicAddress || this.currentTopicAddress == "") {
@@ -88,6 +125,10 @@
 				page.deleteAnswer(this.currentTopicAddress, this.answer.answer_id, () => {
 						self.$emit("update");
 					});
+			},
+			showEdit: function() {
+				this.isEditing = true;
+                this.editText = this.answer.body;
 			}
 		}
 	};
