@@ -380,9 +380,63 @@ class ZeroApp extends ZeroFrame {
     		});
 	}
 
-	// TODO
-	deleteQuestion() {
+	deleteQuestion(currentTopicAddress, question_id, beforePublishCB) {
+		if (!this.siteInfo.cert_user_id) {
+    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to delete a post."]);
+    	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
+    		return this.cmdp("wrapperNotification", ["error", "Cannot delete post that isn't in a topic."]);
+    	}
 
+    	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
+    	var content_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/content.json";
+
+		var self = this;
+		return this.cmdp("fileGet", { "inner_path": data_inner_path, "required": false })
+    		.then((data) => {
+    			data = JSON.parse(data);
+    			if (!data) {
+    				data = {};
+    			}
+
+    			if (!data["questions"]) {
+					console.log("[main.js deleteQuestion] ERROR!");
+					return;
+				}
+				
+				for (var i = 0; i < data["questions"].length; i++) {
+					var question = data["questions"][i];
+					if (question.question_id == question_id) {
+						data["questions"].splice(i, 1);
+						break;
+					}
+				}
+
+    			var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+				return self.cmdp("wrapperConfirm", ["Are you sure?", "Delete"])
+					.then((confirmed) => {
+						if (confirmed) {
+							return self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)]);
+						} else {
+							return false;
+						}
+					});
+			}).then((res) => {
+				if (res == false) return false;
+    			if (res === "ok") {
+					return self.cmdp("siteSign", { "inner_path": content_inner_path });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to write to data file."]);
+    			}
+    		}).then((res) => {
+				if (res == false) return false;
+    			if (res === "ok") {
+    				if (beforePublishCB != null && typeof beforePublishCB === "function") beforePublishCB();
+    				return self.cmdp("sitePublish", { "inner_path": content_inner_path, "sign": false });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to sign user data."]);
+    			}
+    		});
 	}
 
     postAnswer(currentTopicAddress, question_id, question_auth_address, body, beforePublishCB = null) {
@@ -449,8 +503,63 @@ class ZeroApp extends ZeroFrame {
 	}
 	
 	// TODO
-	deleteAnswer() {
+	deleteAnswer(currentTopicAddress, answer_id, beforePublishCB) {
+		if (!this.siteInfo.cert_user_id) {
+    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to delete a post."]);
+    	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
+    		return this.cmdp("wrapperNotification", ["error", "Cannot delete post that isn't in a topic."]);
+    	}
 
+    	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
+    	var content_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/content.json";
+
+		var self = this;
+		return this.cmdp("fileGet", { "inner_path": data_inner_path, "required": false })
+    		.then((data) => {
+    			data = JSON.parse(data);
+    			if (!data) {
+    				data = {};
+    			}
+
+    			if (!data["answers"]) {
+					console.log("[main.js deleteAnswer] ERROR!");
+					return;
+				}
+				
+				for (var i = 0; i < data["answers"].length; i++) {
+					var answers = data["answers"][i];
+					if (answer.answer_id == answer_id) {
+						data["answers"].splice(i, 1);
+						break;
+					}
+				}
+
+    			var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+				return self.cmdp("wrapperConfirm", ["Are you sure?", "Delete"])
+					.then((confirmed) => {
+						if (confirmed) {
+							return self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)]);
+						} else {
+							return false;
+						}
+					});
+			}).then((res) => {
+				if (res == false) return false;
+    			if (res === "ok") {
+					return self.cmdp("siteSign", { "inner_path": content_inner_path });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to write to data file."]);
+    			}
+    		}).then((res) => {
+				if (res == false) return false;
+    			if (res === "ok") {
+    				if (beforePublishCB != null && typeof beforePublishCB === "function") beforePublishCB();
+    				return self.cmdp("sitePublish", { "inner_path": content_inner_path, "sign": false });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to sign user data."]);
+    			}
+    		});
 	}
 
     postComment(currentTopicAddress, reference_type, reference_id, reference_auth_address, body, beforePublishCB = null) {
@@ -550,7 +659,7 @@ class ZeroApp extends ZeroFrame {
     			}
 
     			if (!data["comments"]) {
-					console.log("[main.js l553] ERROR!");
+					console.log("[main.js deleteComment] ERROR!");
 					return;
 				}
 				

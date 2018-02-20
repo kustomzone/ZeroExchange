@@ -60,7 +60,7 @@
 			},
 			deleteComment: function(comment) {
 				if (!this.currentTopicAddress || this.currentTopicAddress === "") {
-					console.log("[comment_area.vue l63] ERROR!");
+					console.log("[comment_area.vue deleteComment] ERROR!");
 					return;
 				}
 
