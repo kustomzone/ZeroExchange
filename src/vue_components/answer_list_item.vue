@@ -87,7 +87,7 @@
 				var self = this;
 				page.deleteAnswer(this.currentTopicAddress, this.answer.answer_id)
 					.then(() => {
-						self.$emit("update"); // TODO
+						self.$emit("update");
 					});
 			}
 		}

@@ -7,7 +7,7 @@
 			<p class="truncate">
 				{{ bodyMarkdownStriped }}
 			</p>
-			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + getTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(getTopicAddress + '/' + getAuthAddress)">{{ getName }}</a><span v-if="showTopicName"> on <a :href="'./?/' + getTopicAddress" v-on:click.prevent="goto(getTopicAddress)">{{ getTopicName }}</a></span></span> <em v-if="userIsOwner"> | <a href="#">Edit</a> | <a href="#"> Delete</a></em></small>
+			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + getTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(getTopicAddress + '/' + getAuthAddress)">{{ getName }}</a><span v-if="showTopicName"> on <a :href="'./?/' + getTopicAddress" v-on:click.prevent="goto(getTopicAddress)">{{ getTopicName }}</a></span></span> <em v-if="userIsOwner"> | <a href="#">Edit</a> | <a href="#" v-on:click.prevent="deleteQuestion"> Delete</a></em></small>
 		</div>
 	</div>
 </template>
@@ -53,6 +53,15 @@
 		methods: {
 			goto: function(to) {
 				Router.navigate(to);
+			},
+			deleteQuestion: function() {
+				if (!this.userIsOwner) return;
+
+				var self = this;
+				page.deleteQuestion(this.getTopicAddress, this.question.question_id)
+					.then(() => {
+						self.$emit("update");
+					});
 			}
 		}
 	};

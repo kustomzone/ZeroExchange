@@ -14,7 +14,7 @@
 	    		      	</form>
 		        	</div>
 		        </nav>
-		        <component :is="question_list_item" v-for="question in getSearchResults" :merger-zites="mergerZites" :user-info="userInfo" :question="question" :show-name="true" :show-topic-name="true"></component>
+		        <component :is="question_list_item" v-for="question in getSearchResults" :merger-zites="mergerZites" :user-info="userInfo" :question="question" :show-name="true" :show-topic-name="true" v-on:update="getQuestions"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
