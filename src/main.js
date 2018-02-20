@@ -384,7 +384,7 @@ class ZeroApp extends ZeroFrame {
 		if (!this.siteInfo.cert_user_id) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to delete a post."]);
     	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
-    		return this.cmdp("wrapperNotification", ["error", "Cannot delete post that isn't in a topic."]);
+    		return this.cmdp("wrapperNotification", ["error", "Cannot delete a post that isn't in a topic."]);
     	}
 
     	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
@@ -395,7 +395,8 @@ class ZeroApp extends ZeroFrame {
     		.then((data) => {
     			data = JSON.parse(data);
     			if (!data) {
-    				data = {};
+    				console.log("[main.js deleteQuestion] ERROR!");
+					return;
     			}
 
     			if (!data["questions"]) {
@@ -502,12 +503,11 @@ class ZeroApp extends ZeroFrame {
     	return this.cmdp("dbQuery", [query]);
 	}
 	
-	// TODO
 	deleteAnswer(currentTopicAddress, answer_id, beforePublishCB) {
 		if (!this.siteInfo.cert_user_id) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to delete a post."]);
     	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
-    		return this.cmdp("wrapperNotification", ["error", "Cannot delete post that isn't in a topic."]);
+    		return this.cmdp("wrapperNotification", ["error", "Cannot delete a post that isn't in a topic."]);
     	}
 
     	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
@@ -518,7 +518,8 @@ class ZeroApp extends ZeroFrame {
     		.then((data) => {
     			data = JSON.parse(data);
     			if (!data) {
-    				data = {};
+    				console.log("[main.js deleteAnswer] ERROR!");
+					return;
     			}
 
     			if (!data["answers"]) {
@@ -639,12 +640,12 @@ class ZeroApp extends ZeroFrame {
 
         return this.cmdp("dbQuery", [query]);
 	}
-	
-	deleteComment(currentTopicAddress, comment_id, beforePublishCB) {
+
+	editComment(currentTopicAddress, comment_id, editText, beforePublishCB) {
 		if (!this.siteInfo.cert_user_id) {
-    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to delete a post."]);
+    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to edit a post."]);
     	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
-    		return this.cmdp("wrapperNotification", ["error", "Cannot delete post that isn't in a topic."]);
+    		return this.cmdp("wrapperNotification", ["error", "Cannot edit a post that isn't in a topic."]);
     	}
 
     	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
@@ -655,7 +656,62 @@ class ZeroApp extends ZeroFrame {
     		.then((data) => {
     			data = JSON.parse(data);
     			if (!data) {
-    				data = {};
+    				console.log("[main.js editComment] ERROR!");
+					return;
+    			}
+
+    			if (!data["comments"]) {
+					console.log("[main.js editComment] ERROR!");
+					return;
+				}
+				
+				for (var i = 0; i < data["comments"].length; i++) {
+					var comment = data["comments"][i];
+					if (comment.comment_id == comment_id) {
+						data["comments"][i].body = editText;
+						data["comments"][i].updated_date = Date.now();
+						break;
+					}
+				}
+
+    			var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+				return self.cmdp("fileWrite", [data_inner_path, btoa(json_raw)]);
+			}).then((res) => {
+				if (res == false) return false;
+    			if (res === "ok") {
+					return self.cmdp("siteSign", { "inner_path": content_inner_path });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to write to data file."]);
+    			}
+    		}).then((res) => {
+				if (res == false) return false;
+    			if (res === "ok") {
+    				if (beforePublishCB != null && typeof beforePublishCB === "function") beforePublishCB();
+    				return self.cmdp("sitePublish", { "inner_path": content_inner_path, "sign": false });
+    			} else {
+    				return self.cmdp("wrapperNotification", ["error", "Failed to sign user data."]);
+    			}
+    		});
+	}
+	
+	deleteComment(currentTopicAddress, comment_id, beforePublishCB) {
+		if (!this.siteInfo.cert_user_id) {
+    		return this.cmdp("wrapperNotification", ["error", "You must be logged in to delete a post."]);
+    	} else if (!Router.currentParams["topicaddress"] && !currentTopicAddress) {
+    		return this.cmdp("wrapperNotification", ["error", "Cannot delete a post that isn't in a topic."]);
+    	}
+
+    	var data_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/data.json";
+    	var content_inner_path = "merged-ZeroExchange/" + currentTopicAddress + "/data/users/" + this.siteInfo.auth_address + "/content.json";
+
+		var self = this;
+		return this.cmdp("fileGet", { "inner_path": data_inner_path, "required": false })
+    		.then((data) => {
+    			data = JSON.parse(data);
+    			if (!data) {
+    				console.log("[main.js deleteComment] ERROR!");
+					return;
     			}
 
     			if (!data["comments"]) {

@@ -58,8 +58,7 @@
 				if (!this.userIsOwner) return;
 
 				var self = this;
-				page.deleteQuestion(this.getTopicAddress, this.question.question_id)
-					.then(() => {
+				page.deleteQuestion(this.getTopicAddress, this.question.question_id, () => {
 						self.$emit("update");
 					});
 			}
