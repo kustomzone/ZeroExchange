@@ -16,9 +16,9 @@
 						<div class="chip"><a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></div>
 	        			<span class="card-title" style="margin-left: 10px;">{{ question.title }}</span>
 	        			<div v-html="getMarkdown" style="margin-bottom: 5px; margin-left: 10px; font-size: 1.2rem;"></div>
-	        			<div style="margin-left: 10px;">Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></div>
+	        			<div style="margin-left: 10px;">Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span> <em v-if="userIsOwner"> | <a href="#">Edit</a> | <a href="#"> Delete</a></em></div>
 	        		</div>
-        			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
+        			<component :is="comment_area" :user-info="userInfo" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
 						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
 						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
 					</component>

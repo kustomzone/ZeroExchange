@@ -7,7 +7,7 @@
 			<p class="truncate">
 				{{ bodyMarkdownStriped }}
 			</p>
-			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + getTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(getTopicAddress + '/' + getAuthAddress)">{{ getName }}</a><span v-if="showTopicName"> on <a :href="'./?/' + getTopicAddress" v-on:click.prevent="goto(getTopicAddress)">{{ getTopicName }}</a></span></span></small>
+			<small>Published {{ getDate }} <span v-if="showName">by <a :href="'./?/' + getTopicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(getTopicAddress + '/' + getAuthAddress)">{{ getName }}</a><span v-if="showTopicName"> on <a :href="'./?/' + getTopicAddress" v-on:click.prevent="goto(getTopicAddress)">{{ getTopicName }}</a></span></span> <em v-if="userIsOwner"> | <a href="#">Edit</a> | <a href="#"> Delete</a></em></small>
 		</div>
 	</div>
 </template>
@@ -17,7 +17,7 @@
 	var Router = require("../libs/router.js");
 
 	module.exports = {
-		props: ["mergerZites", "question", "showName", "showTopicName", "currentTopicAddress"],
+		props: ["userInfo", "mergerZites", "question", "showName", "showTopicName", "currentTopicAddress"],
 		name: "question-list-item",
 		computed: {
 			getName: function() {
@@ -44,6 +44,10 @@
 			},
 			getTopicAddress: function() {
 				return this.question.site;
+			},
+			userIsOwner: function() {
+				if (!this.userInfo) return false;
+				return this.getAuthAddress == this.userInfo.auth_address;
 			}
 		},
 		methods: {

@@ -380,6 +380,11 @@ class ZeroApp extends ZeroFrame {
     		});
 	}
 
+	// TODO
+	deleteQuestion() {
+
+	}
+
     postAnswer(currentTopicAddress, question_id, question_auth_address, body, beforePublishCB = null) {
     	if (!this.siteInfo.cert_user_id) {
     		return this.cmdp("wrapperNotification", ["error", "You must be logged in to make a post."]);
@@ -441,7 +446,12 @@ class ZeroApp extends ZeroFrame {
     		`;
 
     	return this.cmdp("dbQuery", [query]);
-    }
+	}
+	
+	// TODO
+	deleteAnswer() {
+
+	}
 
     postComment(currentTopicAddress, reference_type, reference_id, reference_auth_address, body, beforePublishCB = null) {
     	if (!this.siteInfo.cert_user_id) {
@@ -519,7 +529,12 @@ class ZeroApp extends ZeroFrame {
             `;
 
         return this.cmdp("dbQuery", [query]);
-    }
+	}
+	
+	// TODO
+	deleteComment() {
+
+	}
 }
 
 page = new ZeroApp();
