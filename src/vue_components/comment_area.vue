@@ -6,7 +6,7 @@
 		</div>
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
 			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">
-				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }} <em v-if="userIsOwner(comment)"> | <a href="#">Edit</a> | <a href="#"> Delete</a></em></small>
+				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }} <em v-if="userIsOwner(comment)"> | <a href="#">Edit</a> | <a v-on:click.prevent="deleteComment(comment)"> Delete</a></em></small>
 				<div style="margin-left: 10px;" v-html="commentMarkdown(comment)"></div>
 			</div>
 		</div>
@@ -57,6 +57,18 @@
 					self.$emit("update");
 					//console.log(self.$refs.commentTextArea);
 				});
+			},
+			deleteComment: function(comment) {
+				if (!this.currentTopicAddress || this.currentTopicAddress === "") {
+					console.log("[comment_area.vue l63] ERROR!");
+					return;
+				}
+
+				var self = this;
+				page.deleteComment(this.currentTopicAddress, comment.comment_id)
+					.then(() => {
+							self.$emit("update");
+						});
 			},
 			commentMarkdown: function(comment) {
 				return md.render(comment.body).replace(/(?:(>)|(^|\s|\r\n|\r|\n))(@\S+(?:\'s)?:?)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$3$5</strong>$4").replace(/(<(?:p|li|blockquote)>)(\S+(?:\'s)?:)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$4</strong>$3");
