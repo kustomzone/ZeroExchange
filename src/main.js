@@ -126,8 +126,9 @@ class ZeroApp extends ZeroFrame {
 											});
 									});*/
 								self.addMerger("17PRT7jHB4TN1PMzgWbxDQYrUnWKX2bNcM")
-									.then(() => {
-										return self.cmdp("wrapperNotification", ["info", "You may need to refresh to see the Sandbox topic."]);
+									.then((mergerZites) => {
+										app.$emit('setMergerZites', mergerZites);
+										return self.cmdp("wrapperNotification", ["info", "You may need to refresh to see the Sandbox topic."]); // TODO
 									});
 							} else {
 								app.mergerZites = mergerZites;
@@ -157,7 +158,6 @@ class ZeroApp extends ZeroFrame {
 				return self.cmdp("mergerSiteList", [true])
 					.then((mergerZites) => {
 						app.mergerZites = mergerZites;
-						app.$emit('setMergerZites', mergerZites);
 						return mergerZites;
 						//self.cmdp("wrapperOpenWindow", [self.siteInfo.address]);
 					});
