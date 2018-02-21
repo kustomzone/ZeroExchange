@@ -5,10 +5,7 @@
 			<slot></slot>
 		</div>
 		<div class="card-content card-section" v-if="comments && comments.length > 0">
-			<div v-for="comment in comments" :key="comment.comment_id" style="margin-bottom: 7px;">
-				<a href="#">{{ getName(comment) }}</a> <small>Published {{ getDate(comment) }}</small>
-				<div style="margin-left: 10px;" v-html="commentMarkdown(comment)"></div>
-			</div>
+			<component :is="comment_list_item" :current-topic-address="currentTopicAddress" :user-info="userInfo" v-for="comment in comments" style="margin-bottom: 7px;" :comment="comment" v-on:update="updateComments"></component>
 		</div>
 		<div class="card-content card-section" v-if="showCommentBox">
 			<form v-on:submit.prevent="postComment()">
@@ -24,30 +21,22 @@
 
 <script>
 	var moment = require("moment");
+	var comment_list_item = require("./comment_list_item.vue");
 
 	module.exports = {
-		props: ["comments", "referenceType", "referenceId", "referenceAuthAddress", "currentTopicAddress"],
+		props: ["userInfo", "comments", "referenceType", "referenceId", "referenceAuthAddress", "currentTopicAddress"],
 		name: "commentArea",
 		data: () => {
 			return {
 				showCommentBox: false,
+				comment_list_item: comment_list_item,
 				commentText: ""
 			};
 		},
 		methods: {
-			getName(comment) {
-				if (!comment || !comment.cert_user_id) return "";
-				var name = comment.cert_user_id.replace(/@.+/, "");
-				return name[0].toUpperCase() + name.slice(1);
-			},
-			getDate: function(comment) {
-				return moment(comment.date_added).fromNow();
-			},
-			getAuthAddress: function(comment) {
-				return comment.directory.replace(/data\/users\//, "").replace(/\//g, "");
-			},
 			postComment: function() {
-				if (!this.referenceType || this.referenceType === "" || !this.referenceAuthAddress || this.referenceAuthAddress === "" || !this.referenceId || !this.currentTopicAddress || this.currentTopicAddress === "" || this.commentText === "") return;
+				if (!this.referenceType || this.referenceType === "" || !this.referenceAuthAddress || this.referenceAuthAddress === "" || !this.referenceId || !this.currentTopicAddress || this.currentTopicAddress === "" || this.commentText === "") 
+					return;
 				var self = this;
 				this.submitBtnDisabled = true;
 
@@ -55,11 +44,11 @@
 					self.submitBtnDisabled = false;
 					self.commentText = "";
 					self.$emit("update");
-					//console.log(self.$refs.commentTextArea);
 				});
 			},
-			commentMarkdown: function(comment) {
-				return md.render(comment.body).replace(/(?:(>)|(^|\s|\r\n|\r|\n))(@\S+(?:\'s)?:?)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$3$5</strong>$4").replace(/(<(?:p|li|blockquote)>)(\S+(?:\'s)?:)(?:(<)|(\s|$|\r\n|\r|\n))/g, "$1<strong>$2$4</strong>$3");
+			updateComments: function() {
+				this.comments = [];
+				this.$emit("update");
 			}
 		}
 	}

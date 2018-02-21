@@ -10,20 +10,18 @@
 		        		<form v-on:submit.prevent="postQuestion()">
 			        		<div class="input-field">
 			        			<input id="title" v-model="title" type="text" class="validate" required>
-			        			<label for="title">Title</label>
+			        			<label for="title">Title *</label>
 			        		</div>
 			        		<div class="input-field">
 			        			<textarea id="body" class="materialize-textarea validate" required v-model="body"></textarea>
-			        			<label for="body">Question body</label>
+			        			<label for="body">Question body *</label>
 			        		</div>
-			        		<!--<div class="input-field">
-			        			<input id="tags" v-model="tags" type="text" class="validate" required>
-			        			<label for="tags">Tags</label>
-			        		</div>-->
 							<div class="chips chips-placeholder" ref="tags" style="margin-bottom: 0;"></div>
 							<small>Press enter to add tag</small><br>
 							<br>
 			        		<button type="submit" class="btn waves-effect waves-light" :class="{ 'disabled': submitBtnDisabled }">Submit</button>
+							<br>
+							<small><em style="text-color: red;">* required</em></small>
 			        	</form>
 			        </div>
 	        	</div>
@@ -81,7 +79,7 @@
 		mounted: function() {
 			var tags = this.$refs.tags;
 			this.tagsInstance = new M.Chips(tags, {
-				placeholder: "Enter tags",
+				placeholder: "Enter tags *",
 				secondaryPlaceholder: "+Tag"
 			});
 		},

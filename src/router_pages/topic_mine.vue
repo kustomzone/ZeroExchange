@@ -3,7 +3,7 @@
 		<div class="row">
 	        <div class="col s12 m7 l9">
 	        	<component :is="topic_navbar" active="mine" :user-info="userInfo"></component>
-	        	<component :is="question_list_item" v-for="question in questions" :question="question" :show-name="false" :current-topic-address="topicAddress"></component>
+	        	<component :is="question_list_item" v-for="question in questions" :user-info="userInfo" :question="question" :show-name="false" :current-topic-address="topicAddress" v-on:update="getQuestions"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>

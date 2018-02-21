@@ -71,12 +71,13 @@
                 ["reference_id", "INTEGER"],
                 ["reference_auth_address", "TEXT"],
                 ["reference_type", "TEXT"],
-                ["body", "TEXT"],
+				["body", "TEXT"],
+				["date_updated", "INTEGER"],
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX comment_key ON comments(json_id, comment_id)", "CREATE INDEX comment_reference_idx ON comments(reference_id, reference_auth_address, reference_type)", "CREATE INDEX comment_date_added_idx ON comments (date_added DESC)"],
-            "schema_changed": 2
+            "schema_changed": 3
         }
 	}
 }

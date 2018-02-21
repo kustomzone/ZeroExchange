@@ -16,9 +16,9 @@
 						<div class="chip"><a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></div>
 	        			<span class="card-title" style="margin-left: 10px;">{{ question.title }}</span>
 	        			<div v-html="getMarkdown" style="margin-bottom: 5px; margin-left: 10px; font-size: 1.2rem;"></div>
-	        			<div style="margin-left: 10px;">Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span></div>
+	        			<div style="margin-left: 10px;">Published {{ getDate }} <span>by <a :href="'./?/' + topicAddress + '/' + getAuthAddress" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress)">{{ getName }}</a></span> <em v-if="userIsOwner"> | <a href="#">Edit</a> | <a href="#"> Delete</a></em></div>
 	        		</div>
-        			<component :is="comment_area" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
+        			<component :is="comment_area" :user-info="userInfo" :current-topic-address="topicAddress" :comments="comments" :reference-id="question.question_id" :reference-auth-address="getAuthAddress" reference-type="q" v-on:update="getComments()">
 						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_up</i></a>
 						<a href="#" style="margin-right: 7px;"><i class="material-icons" style="font-size: 1.3rem;">thumb_down</i></a>
 					</component>
@@ -26,7 +26,7 @@
 	        	<h5 v-if="question">Answers <small style="margin-left: 10px; font-size: 65%;"><a :href="'./?/' + topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer'" v-on:click.prevent="goto(topicAddress + '/' + getAuthAddress + '/' + question.question_id + '/answer')">Post Answer</a></small></h5>
 	        	<div class="divider"></div>
 
-	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner" v-on:mark-solution="markSolution" :solution-id="question.solution_id" :solution-auth-address="question.solution_auth_address"></component>
+	        	<component :is="answer_list_item" v-for="answer in answers" :key="answer.answer_id" :user-info="userInfo" :merger-zites="mergerZites" :current-topic-address="topicAddress" :show-name="true" :answer="answer" :user-is-question-owner="userIsOwner" v-on:mark-solution="markSolution" v-on:update="getAnswers" :solution-id="question.solution_id" :solution-auth-address="question.solution_auth_address"></component>
 	        </div>
 	        <div class="col s12 m5 l3">
 	        	<component :is="connected_topics" :merger-zites="mergerZites"></component>
